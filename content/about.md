@@ -7,6 +7,7 @@ ShowBreadCrumbs: false
 ShowPostNavLinks: false
 ShowWordCount: false
 ShowToc: false
+ShowDate: false
 ---
 
 {{< about >}}
