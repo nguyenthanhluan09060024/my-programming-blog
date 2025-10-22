@@ -1,0 +1,902 @@
+<!doctype html><html lang=en dir=auto><head><meta charset=utf-8><meta http-equiv=X-UA-Compatible content="IE=edge"><meta name=viewport content="width=device-width,initial-scale=1,shrink-to-fit=no"><meta name=robots content="index, follow"><title>Spring Data JPA - Làm Việc Với Database Hiệu Quả | My Programming Blog</title><meta name=keywords content="java,spring-data-jpa,database,orm"><meta name=description content="Hướng dẫn chi tiết về Spring Data JPA để làm việc với database một cách hiệu quả"><meta name=author content="Thanh Tai"><link rel=canonical href=https://nguyenthanhluan09060024.github.io/my-programming-blog/posts/java-spring-data-jpa/><link crossorigin=anonymous href=/my-programming-blog/assets/css/stylesheet.a482bf00fa5c046040ef7973ad5fdf5657890cacb596c93f1382f664ca542074.css integrity="sha256-pIK/APpcBGBA73lzrV/fVleJDKy1lsk/E4L2ZMpUIHQ=" rel="preload stylesheet" as=style><link rel=icon href=https://nguyenthanhluan09060024.github.io/my-programming-blog/favicon.ico><link rel=icon type=image/png sizes=16x16 href=https://nguyenthanhluan09060024.github.io/my-programming-blog/favicon-16x16.png><link rel=icon type=image/png sizes=32x32 href=https://nguyenthanhluan09060024.github.io/my-programming-blog/favicon-32x32.png><link rel=apple-touch-icon href=https://nguyenthanhluan09060024.github.io/my-programming-blog/apple-touch-icon.png><link rel=mask-icon href=https://nguyenthanhluan09060024.github.io/my-programming-blog/safari-pinned-tab.svg><meta name=theme-color content="#2e2e33"><meta name=msapplication-TileColor content="#2e2e33"><link rel=alternate hreflang=en href=https://nguyenthanhluan09060024.github.io/my-programming-blog/posts/java-spring-data-jpa/><noscript><style>#theme-toggle,.top-link{display:none}</style><style>@media(prefers-color-scheme:dark){:root{--theme:rgb(29, 30, 32);--entry:rgb(46, 46, 51);--primary:rgb(218, 218, 219);--secondary:rgb(155, 156, 157);--tertiary:rgb(65, 66, 68);--content:rgb(196, 196, 197);--code-block-bg:rgb(46, 46, 51);--code-bg:rgb(55, 56, 62);--border:rgb(51, 51, 51)}.list{background:var(--theme)}.list:not(.dark)::-webkit-scrollbar-track{background:0 0}.list:not(.dark)::-webkit-scrollbar-thumb{border-color:var(--theme)}}</style></noscript><meta property="og:url" content="https://nguyenthanhluan09060024.github.io/my-programming-blog/posts/java-spring-data-jpa/"><meta property="og:site_name" content="My Programming Blog"><meta property="og:title" content="Spring Data JPA - Làm Việc Với Database Hiệu Quả"><meta property="og:description" content="Hướng dẫn chi tiết về Spring Data JPA để làm việc với database một cách hiệu quả"><meta property="og:locale" content="vi"><meta property="og:type" content="article"><meta property="article:section" content="posts"><meta property="article:published_time" content="2024-01-08T15:00:00+07:00"><meta property="article:modified_time" content="2024-01-08T15:00:00+07:00"><meta property="article:tag" content="Java"><meta property="article:tag" content="Spring-Data-Jpa"><meta property="article:tag" content="Database"><meta property="article:tag" content="Orm"><meta name=twitter:card content="summary"><meta name=twitter:title content="Spring Data JPA - Làm Việc Với Database Hiệu Quả"><meta name=twitter:description content="Hướng dẫn chi tiết về Spring Data JPA để làm việc với database một cách hiệu quả"><script type=application/ld+json>{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Posts","item":"https://nguyenthanhluan09060024.github.io/my-programming-blog/posts/"},{"@type":"ListItem","position":2,"name":"Spring Data JPA - Làm Việc Với Database Hiệu Quả","item":"https://nguyenthanhluan09060024.github.io/my-programming-blog/posts/java-spring-data-jpa/"}]}</script><script type=application/ld+json>{"@context":"https://schema.org","@type":"BlogPosting","headline":"Spring Data JPA - Làm Việc Với Database Hiệu Quả","name":"Spring Data JPA - Làm Việc Với Database Hiệu Quả","description":"Hướng dẫn chi tiết về Spring Data JPA để làm việc với database một cách hiệu quả","keywords":["java","spring-data-jpa","database","orm"],"articleBody":"Spring Data JPA - Làm Việc Với Database Hiệu Quả Spring Data JPA giúp đơn giản hóa việc làm việc với database trong ứng dụng Spring Boot. Trong bài viết này, tôi sẽ hướng dẫn bạn cách sử dụng Spring Data JPA một cách hiệu quả.\nSpring Data JPA là gì? Spring Data JPA là một phần của Spring Data project, cung cấp một abstraction layer trên JPA (Java Persistence API) để đơn giản hóa việc phát triển các ứng dụng sử dụng database.\nƯu điểm: Giảm boilerplate code: Tự động generate implementation Query methods: Tạo queries từ method names Pagination: Hỗ trợ phân trang built-in Auditing: Tự động track create/update timestamps Caching: Tích hợp với Spring Cache Cài Đặt và Cấu Hình 1. Dependencies 1 2 3 4 5 6 7 8 9 10 11 12 13 14 org.springframework.boot spring-boot-starter-data-jpa mysql mysql-connector-java org.springframework.boot spring-boot-starter-validation 2. Application Properties 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 # Database Configuration spring.datasource.url=jdbc:mysql://localhost:3306/myapp?useSSL=false\u0026serverTimezone=UTC spring.datasource.username=root spring.datasource.password=password spring.datasource.driver-class-name=com.mysql.cj.jdbc.Driver # JPA Configuration spring.jpa.hibernate.ddl-auto=update spring.jpa.show-sql=true spring.jpa.properties.hibernate.dialect=org.hibernate.dialect.MySQL8Dialect spring.jpa.properties.hibernate.format_sql=true # Connection Pool spring.datasource.hikari.maximum-pool-size=20 spring.datasource.hikari.minimum-idle=5 spring.datasource.hikari.idle-timeout=300000 spring.datasource.hikari.max-lifetime=1200000 Entity Mapping 1. Basic Entity 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26 27 28 29 30 31 32 33 34 35 36 37 @Entity @Table(name = \"users\") public class User { @Id @GeneratedValue(strategy = GenerationType.IDENTITY) private Long id; @Column(name = \"username\", unique = true, nullable = false) private String username; @Column(name = \"email\", unique = true, nullable = false) private String email; @Column(name = \"first_name\") private String firstName; @Column(name = \"last_name\") private String lastName; @Enumerated(EnumType.STRING) @Column(name = \"status\") private UserStatus status = UserStatus.ACTIVE; @CreationTimestamp @Column(name = \"created_at\", updatable = false) private LocalDateTime createdAt; @UpdateTimestamp @Column(name = \"updated_at\") private LocalDateTime updatedAt; // Constructors, getters, setters } public enum UserStatus { ACTIVE, INACTIVE, SUSPENDED } 2. Relationship Mapping 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26 27 28 29 30 31 32 33 34 35 36 37 38 39 40 41 42 43 44 45 46 47 48 49 50 51 @Entity @Table(name = \"orders\") public class Order { @Id @GeneratedValue(strategy = GenerationType.IDENTITY) private Long id; @ManyToOne(fetch = FetchType.LAZY) @JoinColumn(name = \"user_id\", nullable = false) private User user; @OneToMany(mappedBy = \"order\", cascade = CascadeType.ALL, fetch = FetchType.LAZY) private List\u003cOrderItem\u003e items = new ArrayList\u003c\u003e(); @Column(name = \"total_amount\", precision = 10, scale = 2) private BigDecimal totalAmount; @Enumerated(EnumType.STRING) @Column(name = \"status\") private OrderStatus status = OrderStatus.PENDING; @CreationTimestamp @Column(name = \"created_at\", updatable = false) private LocalDateTime createdAt; // Constructors, getters, setters } @Entity @Table(name = \"order_items\") public class OrderItem { @Id @GeneratedValue(strategy = GenerationType.IDENTITY) private Long id; @ManyToOne(fetch = FetchType.LAZY) @JoinColumn(name = \"order_id\", nullable = false) private Order order; @ManyToOne(fetch = FetchType.LAZY) @JoinColumn(name = \"product_id\", nullable = false) private Product product; @Column(name = \"quantity\", nullable = false) private Integer quantity; @Column(name = \"price\", precision = 10, scale = 2, nullable = false) private BigDecimal price; // Constructors, getters, setters } Repository Layer 1. Basic Repository 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26 27 @Repository public interface UserRepository extends JpaRepository\u003cUser, Long\u003e { // Query methods Optional\u003cUser\u003e findByUsername(String username); Optional\u003cUser\u003e findByEmail(String email); List\u003cUser\u003e findByStatus(UserStatus status); List\u003cUser\u003e findByFirstNameContainingIgnoreCase(String firstName); List\u003cUser\u003e findByCreatedAtBetween(LocalDateTime start, LocalDateTime end); // Custom queries @Query(\"SELECT u FROM User u WHERE u.status = :status AND u.createdAt \u003e= :date\") List\u003cUser\u003e findActiveUsersAfterDate(@Param(\"status\") UserStatus status, @Param(\"date\") LocalDateTime date); @Query(value = \"SELECT * FROM users WHERE first_name LIKE %:name%\", nativeQuery = true) List\u003cUser\u003e findUsersByNameNative(@Param(\"name\") String name); // Exists queries boolean existsByUsername(String username); boolean existsByEmail(String email); // Count queries long countByStatus(UserStatus status); // Delete queries void deleteByStatus(UserStatus status); } 2. Custom Repository Implementation 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26 27 28 29 30 31 32 33 34 35 36 37 38 39 40 41 42 43 44 45 46 47 48 49 50 51 52 53 54 55 56 57 58 59 60 61 62 63 64 65 public interface UserRepositoryCustom { List\u003cUser\u003e findUsersWithComplexCriteria(UserSearchCriteria criteria); Page\u003cUser\u003e findUsersWithPagination(UserSearchCriteria criteria, Pageable pageable); } @Repository public class UserRepositoryImpl implements UserRepositoryCustom { @PersistenceContext private EntityManager entityManager; @Override public List\u003cUser\u003e findUsersWithComplexCriteria(UserSearchCriteria criteria) { CriteriaBuilder cb = entityManager.getCriteriaBuilder(); CriteriaQuery\u003cUser\u003e query = cb.createQuery(User.class); Root\u003cUser\u003e user = query.from(User.class); List\u003cPredicate\u003e predicates = new ArrayList\u003c\u003e(); if (criteria.getUsername() != null) { predicates.add(cb.like(user.get(\"username\"), \"%\" + criteria.getUsername() + \"%\")); } if (criteria.getStatus() != null) { predicates.add(cb.equal(user.get(\"status\"), criteria.getStatus())); } if (criteria.getStartDate() != null) { predicates.add(cb.greaterThanOrEqualTo(user.get(\"createdAt\"), criteria.getStartDate())); } if (criteria.getEndDate() != null) { predicates.add(cb.lessThanOrEqualTo(user.get(\"createdAt\"), criteria.getEndDate())); } query.where(predicates.toArray(new Predicate[0])); return entityManager.createQuery(query).getResultList(); } @Override public Page\u003cUser\u003e findUsersWithPagination(UserSearchCriteria criteria, Pageable pageable) { CriteriaBuilder cb = entityManager.getCriteriaBuilder(); CriteriaQuery\u003cUser\u003e query = cb.createQuery(User.class); Root\u003cUser\u003e user = query.from(User.class); // Add predicates... query.where(predicates.toArray(new Predicate[0])); List\u003cUser\u003e users = entityManager.createQuery(query) .setFirstResult((int) pageable.getOffset()) .setMaxResults(pageable.getPageSize()) .getResultList(); // Count query CriteriaQuery\u003cLong\u003e countQuery = cb.createQuery(Long.class); countQuery.select(cb.count(countQuery.from(User.class))); countQuery.where(predicates.toArray(new Predicate[0])); Long total = entityManager.createQuery(countQuery).getSingleResult(); return new PageImpl\u003c\u003e(users, pageable, total); } } Service Layer 1. Basic Service 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26 27 28 29 30 31 32 33 34 35 36 37 38 39 40 41 42 43 44 45 46 47 48 @Service @Transactional public class UserService { @Autowired private UserRepository userRepository; public List\u003cUser\u003e getAllUsers() { return userRepository.findAll(); } public Optional\u003cUser\u003e getUserById(Long id) { return userRepository.findById(id); } public User createUser(CreateUserRequest request) { if (userRepository.existsByUsername(request.getUsername())) { throw new RuntimeException(\"Username already exists\"); } if (userRepository.existsByEmail(request.getEmail())) { throw new RuntimeException(\"Email already exists\"); } User user = new User(); user.setUsername(request.getUsername()); user.setEmail(request.getEmail()); user.setFirstName(request.getFirstName()); user.setLastName(request.getLastName()); return userRepository.save(user); } public User updateUser(Long id, UpdateUserRequest request) { User user = userRepository.findById(id) .orElseThrow(() -\u003e new RuntimeException(\"User not found\")); user.setFirstName(request.getFirstName()); user.setLastName(request.getLastName()); user.setEmail(request.getEmail()); return userRepository.save(user); } public void deleteUser(Long id) { userRepository.deleteById(id); } } 2. Advanced Service với Pagination 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 @Service @Transactional public class UserService { @Autowired private UserRepository userRepository; public Page\u003cUser\u003e getUsers(UserSearchCriteria criteria, Pageable pageable) { return userRepository.findUsersWithPagination(criteria, pageable); } public List\u003cUser\u003e searchUsers(UserSearchCriteria criteria) { return userRepository.findUsersWithComplexCriteria(criteria); } @Transactional(readOnly = true) public UserStatistics getUserStatistics() { long totalUsers = userRepository.count(); long activeUsers = userRepository.countByStatus(UserStatus.ACTIVE); long inactiveUsers = userRepository.countByStatus(UserStatus.INACTIVE); return new UserStatistics(totalUsers, activeUsers, inactiveUsers); } } Pagination và Sorting 1. Controller với Pagination 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26 27 28 29 30 31 @RestController @RequestMapping(\"/api/users\") public class UserController { @Autowired private UserService userService; @GetMapping public ResponseEntity\u003cPage\u003cUser\u003e\u003e getUsers( @RequestParam(defaultValue = \"0\") int page, @RequestParam(defaultValue = \"10\") int size, @RequestParam(defaultValue = \"id\") String sortBy, @RequestParam(defaultValue = \"asc\") String sortDir, @RequestParam(required = false) String search, @RequestParam(required = false) UserStatus status) { Sort sort = sortDir.equalsIgnoreCase(\"desc\") ? Sort.by(sortBy).descending() : Sort.by(sortBy).ascending(); Pageable pageable = PageRequest.of(page, size, sort); UserSearchCriteria criteria = new UserSearchCriteria(); criteria.setSearch(search); criteria.setStatus(status); Page\u003cUser\u003e users = userService.getUsers(criteria, pageable); return ResponseEntity.ok(users); } } Caching 1. Enable Caching 1 2 3 4 5 6 7 @SpringBootApplication @EnableCaching public class Application { public static void main(String[] args) { SpringApplication.run(Application.class, args); } } 2. Cache Configuration 1 2 3 4 5 6 7 8 9 10 11 12 13 @Configuration @EnableCaching public class CacheConfig { @Bean public CacheManager cacheManager() { CaffeineCacheManager cacheManager = new CaffeineCacheManager(); cacheManager.setCaffeine(Caffeine.newBuilder() .maximumSize(1000) .expireAfterWrite(10, TimeUnit.MINUTES)); return cacheManager; } } 3. Caching trong Service 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 @Service public class UserService { @Cacheable(value = \"users\", key = \"#id\") public Optional\u003cUser\u003e getUserById(Long id) { return userRepository.findById(id); } @CacheEvict(value = \"users\", key = \"#user.id\") public User updateUser(User user) { return userRepository.save(user); } @CacheEvict(value = \"users\", allEntries = true) public void clearCache() { // Clear all cache entries } } Auditing 1. Enable Auditing 1 2 3 4 5 6 7 @SpringBootApplication @EnableJpaAuditing public class Application { public static void main(String[] args) { SpringApplication.run(Application.class, args); } } 2. Auditing Entity 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 @Entity @EntityListeners(AuditingEntityListener.class) public class User { // ... other fields @CreatedBy @Column(name = \"created_by\") private String createdBy; @LastModifiedBy @Column(name = \"last_modified_by\") private String lastModifiedBy; @CreationTimestamp @Column(name = \"created_at\", updatable = false) private LocalDateTime createdAt; @UpdateTimestamp @Column(name = \"updated_at\") private LocalDateTime updatedAt; } 3. Auditor Provider 1 2 3 4 5 6 7 8 9 10 11 12 13 @Component public class AuditorProvider implements AuditorAware\u003cString\u003e { @Override public Optional\u003cString\u003e getCurrentAuditor() { // Get current user from security context Authentication authentication = SecurityContextHolder.getContext().getAuthentication(); if (authentication != null \u0026\u0026 authentication.isAuthenticated()) { return Optional.of(authentication.getName()); } return Optional.of(\"system\"); } } Batch Operations 1. Batch Insert 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 @Service public class UserService { @Autowired private UserRepository userRepository; @Transactional public void batchCreateUsers(List\u003cCreateUserRequest\u003e requests) { List\u003cUser\u003e users = requests.stream() .map(this::mapToUser) .collect(Collectors.toList()); userRepository.saveAll(users); } @Transactional public void batchUpdateUsers(List\u003cUpdateUserRequest\u003e requests) { List\u003cUser\u003e users = requests.stream() .map(this::mapToUser) .collect(Collectors.toList()); userRepository.saveAll(users); } } 2. Batch Delete 1 2 3 4 5 6 7 8 9 10 11 @Repository public interface UserRepository extends JpaRepository\u003cUser, Long\u003e { @Modifying @Query(\"DELETE FROM User u WHERE u.status = :status\") void deleteByStatus(@Param(\"status\") UserStatus status); @Modifying @Query(\"DELETE FROM User u WHERE u.createdAt \u003c :date\") void deleteUsersOlderThan(@Param(\"date\") LocalDateTime date); } Performance Optimization 1. Lazy Loading 1 2 3 4 5 @Entity public class User { @OneToMany(mappedBy = \"user\", fetch = FetchType.LAZY) private List\u003cOrder\u003e orders = new ArrayList\u003c\u003e(); } 2. Eager Loading với @EntityGraph 1 2 3 @EntityGraph(attributePaths = {\"orders\", \"orders.items\"}) @Query(\"SELECT u FROM User u WHERE u.id = :id\") Optional\u003cUser\u003e findByIdWithOrders(@Param(\"id\") Long id); 3. Projection 1 2 3 4 5 6 7 8 9 10 11 public interface UserProjection { String getUsername(); String getEmail(); String getFirstName(); String getLastName(); } @Repository public interface UserRepository extends JpaRepository\u003cUser, Long\u003e { List\u003cUserProjection\u003e findByStatus(UserStatus status); } Kết Luận Spring Data JPA cung cấp một cách mạnh mẽ và hiệu quả để làm việc với database. Với những kiến thức này, bạn có thể:\nTạo entities và relationships Sử dụng query methods và custom queries Implement pagination và sorting Sử dụng caching để tối ưu performance Thực hiện batch operations Tối ưu hóa queries Trong bài viết tiếp theo, tôi sẽ hướng dẫn về testing với Spring Boot! 🚀\n","wordCount":"1764","inLanguage":"en","datePublished":"2024-01-08T15:00:00+07:00","dateModified":"2024-01-08T15:00:00+07:00","author":{"@type":"Person","name":"Thanh Tai"},"mainEntityOfPage":{"@type":"WebPage","@id":"https://nguyenthanhluan09060024.github.io/my-programming-blog/posts/java-spring-data-jpa/"},"publisher":{"@type":"Organization","name":"My Programming Blog","logo":{"@type":"ImageObject","url":"https://nguyenthanhluan09060024.github.io/my-programming-blog/favicon.ico"}}}</script></head><body id=top><script>localStorage.getItem("pref-theme")==="dark"?document.body.classList.add("dark"):localStorage.getItem("pref-theme")==="light"?document.body.classList.remove("dark"):window.matchMedia("(prefers-color-scheme: dark)").matches&&document.body.classList.add("dark")</script><header class=header><nav class=nav><div class=logo><a href=https://nguyenthanhluan09060024.github.io/my-programming-blog/ accesskey=h title="My Programming Blog (Alt + H)">My Programming Blog</a><div class=logo-switches><button id=theme-toggle accesskey=t title="(Alt + T)" aria-label="Toggle theme">
+<svg id="moon" width="24" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"/></svg>
+<svg id="sun" width="24" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg></button></div></div><ul id=menu><li><a href=https://nguyenthanhluan09060024.github.io/my-programming-blog/ title="🏠 Trang chủ"><span>🏠 Trang chủ</span></a></li><li><a href=https://nguyenthanhluan09060024.github.io/my-programming-blog/posts/ title="📝 Bài viết"><span>📝 Bài viết</span></a></li><li><a href=https://nguyenthanhluan09060024.github.io/my-programming-blog/about/ title="👋 Giới thiệu"><span>👋 Giới thiệu</span></a></li></ul></nav></header><main class=main><article class=post-single><header class=post-header><div class=breadcrumbs><a href=https://nguyenthanhluan09060024.github.io/my-programming-blog/>Home</a>&nbsp;»&nbsp;<a href=https://nguyenthanhluan09060024.github.io/my-programming-blog/posts/>Posts</a></div><h1 class="post-title entry-hint-parent">Spring Data JPA - Làm Việc Với Database Hiệu Quả</h1><div class=post-description>Hướng dẫn chi tiết về Spring Data JPA để làm việc với database một cách hiệu quả</div><div class=post-meta></div></header><div class=toc><details><summary accesskey=c title="(Alt + C)"><span class=details>Table of Contents</span></summary><div class=inner><nav id=TableOfContents><ul><li><a href=#spring-data-jpa-là-gì>Spring Data JPA là gì?</a><ul><li><a href=#ưu-điểm>Ưu điểm:</a></li></ul></li><li><a href=#cài-đặt-và-cấu-hình>Cài Đặt và Cấu Hình</a><ul><li><a href=#1-dependencies>1. Dependencies</a></li><li><a href=#2-application-properties>2. Application Properties</a></li></ul></li><li><a href=#entity-mapping>Entity Mapping</a><ul><li><a href=#1-basic-entity>1. Basic Entity</a></li><li><a href=#2-relationship-mapping>2. Relationship Mapping</a></li></ul></li><li><a href=#repository-layer>Repository Layer</a><ul><li><a href=#1-basic-repository>1. Basic Repository</a></li><li><a href=#2-custom-repository-implementation>2. Custom Repository Implementation</a></li></ul></li><li><a href=#service-layer>Service Layer</a><ul><li><a href=#1-basic-service>1. Basic Service</a></li><li><a href=#2-advanced-service-với-pagination>2. Advanced Service với Pagination</a></li></ul></li><li><a href=#pagination-và-sorting>Pagination và Sorting</a><ul><li><a href=#1-controller-với-pagination>1. Controller với Pagination</a></li></ul></li><li><a href=#caching>Caching</a><ul><li><a href=#1-enable-caching>1. Enable Caching</a></li><li><a href=#2-cache-configuration>2. Cache Configuration</a></li><li><a href=#3-caching-trong-service>3. Caching trong Service</a></li></ul></li><li><a href=#auditing>Auditing</a><ul><li><a href=#1-enable-auditing>1. Enable Auditing</a></li><li><a href=#2-auditing-entity>2. Auditing Entity</a></li><li><a href=#3-auditor-provider>3. Auditor Provider</a></li></ul></li><li><a href=#batch-operations>Batch Operations</a><ul><li><a href=#1-batch-insert>1. Batch Insert</a></li><li><a href=#2-batch-delete>2. Batch Delete</a></li></ul></li><li><a href=#performance-optimization>Performance Optimization</a><ul><li><a href=#1-lazy-loading>1. Lazy Loading</a></li><li><a href=#2-eager-loading-với-entitygraph>2. Eager Loading với @EntityGraph</a></li><li><a href=#3-projection>3. Projection</a></li></ul></li><li><a href=#kết-luận>Kết Luận</a></li></ul></nav></div></details></div><div class=post-content><h1 id=spring-data-jpa---làm-việc-với-database-hiệu-quả>Spring Data JPA - Làm Việc Với Database Hiệu Quả<a hidden class=anchor aria-hidden=true href=#spring-data-jpa---làm-việc-với-database-hiệu-quả>#</a></h1><p>Spring Data JPA giúp đơn giản hóa việc làm việc với database trong ứng dụng Spring Boot. Trong bài viết này, tôi sẽ hướng dẫn bạn cách sử dụng Spring Data JPA một cách hiệu quả.</p><h2 id=spring-data-jpa-là-gì>Spring Data JPA là gì?<a hidden class=anchor aria-hidden=true href=#spring-data-jpa-là-gì>#</a></h2><p>Spring Data JPA là một phần của Spring Data project, cung cấp một abstraction layer trên JPA (Java Persistence API) để đơn giản hóa việc phát triển các ứng dụng sử dụng database.</p><h3 id=ưu-điểm>Ưu điểm:<a hidden class=anchor aria-hidden=true href=#ưu-điểm>#</a></h3><ul><li><strong>Giảm boilerplate code</strong>: Tự động generate implementation</li><li><strong>Query methods</strong>: Tạo queries từ method names</li><li><strong>Pagination</strong>: Hỗ trợ phân trang built-in</li><li><strong>Auditing</strong>: Tự động track create/update timestamps</li><li><strong>Caching</strong>: Tích hợp với Spring Cache</li></ul><h2 id=cài-đặt-và-cấu-hình>Cài Đặt và Cấu Hình<a hidden class=anchor aria-hidden=true href=#cài-đặt-và-cấu-hình>#</a></h2><h3 id=1-dependencies>1. Dependencies<a hidden class=anchor aria-hidden=true href=#1-dependencies>#</a></h3><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span><span class=lnt>12
+</span><span class=lnt>13
+</span><span class=lnt>14
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-xml data-lang=xml><span class=line><span class=cl><span class=nt>&lt;dependencies&gt;</span>
+</span></span><span class=line><span class=cl>    <span class=nt>&lt;dependency&gt;</span>
+</span></span><span class=line><span class=cl>        <span class=nt>&lt;groupId&gt;</span>org.springframework.boot<span class=nt>&lt;/groupId&gt;</span>
+</span></span><span class=line><span class=cl>        <span class=nt>&lt;artifactId&gt;</span>spring-boot-starter-data-jpa<span class=nt>&lt;/artifactId&gt;</span>
+</span></span><span class=line><span class=cl>    <span class=nt>&lt;/dependency&gt;</span>
+</span></span><span class=line><span class=cl>    <span class=nt>&lt;dependency&gt;</span>
+</span></span><span class=line><span class=cl>        <span class=nt>&lt;groupId&gt;</span>mysql<span class=nt>&lt;/groupId&gt;</span>
+</span></span><span class=line><span class=cl>        <span class=nt>&lt;artifactId&gt;</span>mysql-connector-java<span class=nt>&lt;/artifactId&gt;</span>
+</span></span><span class=line><span class=cl>    <span class=nt>&lt;/dependency&gt;</span>
+</span></span><span class=line><span class=cl>    <span class=nt>&lt;dependency&gt;</span>
+</span></span><span class=line><span class=cl>        <span class=nt>&lt;groupId&gt;</span>org.springframework.boot<span class=nt>&lt;/groupId&gt;</span>
+</span></span><span class=line><span class=cl>        <span class=nt>&lt;artifactId&gt;</span>spring-boot-starter-validation<span class=nt>&lt;/artifactId&gt;</span>
+</span></span><span class=line><span class=cl>    <span class=nt>&lt;/dependency&gt;</span>
+</span></span><span class=line><span class=cl><span class=nt>&lt;/dependencies&gt;</span>
+</span></span></code></pre></td></tr></table></div></div><h3 id=2-application-properties>2. Application Properties<a hidden class=anchor aria-hidden=true href=#2-application-properties>#</a></h3><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span><span class=lnt>12
+</span><span class=lnt>13
+</span><span class=lnt>14
+</span><span class=lnt>15
+</span><span class=lnt>16
+</span><span class=lnt>17
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-properties data-lang=properties><span class=line><span class=cl><span class=c1># Database Configuration</span>
+</span></span><span class=line><span class=cl><span class=na>spring.datasource.url</span><span class=o>=</span><span class=s>jdbc:mysql://localhost:3306/myapp?useSSL=false&amp;serverTimezone=UTC</span>
+</span></span><span class=line><span class=cl><span class=na>spring.datasource.username</span><span class=o>=</span><span class=s>root</span>
+</span></span><span class=line><span class=cl><span class=na>spring.datasource.password</span><span class=o>=</span><span class=s>password</span>
+</span></span><span class=line><span class=cl><span class=na>spring.datasource.driver-class-name</span><span class=o>=</span><span class=s>com.mysql.cj.jdbc.Driver</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=c1># JPA Configuration</span>
+</span></span><span class=line><span class=cl><span class=na>spring.jpa.hibernate.ddl-auto</span><span class=o>=</span><span class=s>update</span>
+</span></span><span class=line><span class=cl><span class=na>spring.jpa.show-sql</span><span class=o>=</span><span class=s>true</span>
+</span></span><span class=line><span class=cl><span class=na>spring.jpa.properties.hibernate.dialect</span><span class=o>=</span><span class=s>org.hibernate.dialect.MySQL8Dialect</span>
+</span></span><span class=line><span class=cl><span class=na>spring.jpa.properties.hibernate.format_sql</span><span class=o>=</span><span class=s>true</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=c1># Connection Pool</span>
+</span></span><span class=line><span class=cl><span class=na>spring.datasource.hikari.maximum-pool-size</span><span class=o>=</span><span class=s>20</span>
+</span></span><span class=line><span class=cl><span class=na>spring.datasource.hikari.minimum-idle</span><span class=o>=</span><span class=s>5</span>
+</span></span><span class=line><span class=cl><span class=na>spring.datasource.hikari.idle-timeout</span><span class=o>=</span><span class=s>300000</span>
+</span></span><span class=line><span class=cl><span class=na>spring.datasource.hikari.max-lifetime</span><span class=o>=</span><span class=s>1200000</span>
+</span></span></code></pre></td></tr></table></div></div><h2 id=entity-mapping>Entity Mapping<a hidden class=anchor aria-hidden=true href=#entity-mapping>#</a></h2><h3 id=1-basic-entity>1. Basic Entity<a hidden class=anchor aria-hidden=true href=#1-basic-entity>#</a></h3><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span><span class=lnt>12
+</span><span class=lnt>13
+</span><span class=lnt>14
+</span><span class=lnt>15
+</span><span class=lnt>16
+</span><span class=lnt>17
+</span><span class=lnt>18
+</span><span class=lnt>19
+</span><span class=lnt>20
+</span><span class=lnt>21
+</span><span class=lnt>22
+</span><span class=lnt>23
+</span><span class=lnt>24
+</span><span class=lnt>25
+</span><span class=lnt>26
+</span><span class=lnt>27
+</span><span class=lnt>28
+</span><span class=lnt>29
+</span><span class=lnt>30
+</span><span class=lnt>31
+</span><span class=lnt>32
+</span><span class=lnt>33
+</span><span class=lnt>34
+</span><span class=lnt>35
+</span><span class=lnt>36
+</span><span class=lnt>37
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-java data-lang=java><span class=line><span class=cl><span class=nd>@Entity</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w></span><span class=nd>@Table</span><span class=p>(</span><span class=n>name</span><span class=w> </span><span class=o>=</span><span class=w> </span><span class=s>&#34;users&#34;</span><span class=p>)</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w></span><span class=kd>public</span><span class=w> </span><span class=kd>class</span> <span class=nc>User</span><span class=w> </span><span class=p>{</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>    </span><span class=nd>@Id</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>    </span><span class=nd>@GeneratedValue</span><span class=p>(</span><span class=n>strategy</span><span class=w> </span><span class=o>=</span><span class=w> </span><span class=n>GenerationType</span><span class=p>.</span><span class=na>IDENTITY</span><span class=p>)</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>    </span><span class=kd>private</span><span class=w> </span><span class=n>Long</span><span class=w> </span><span class=n>id</span><span class=p>;</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>    
+</span></span></span><span class=line><span class=cl><span class=w>    </span><span class=nd>@Column</span><span class=p>(</span><span class=n>name</span><span class=w> </span><span class=o>=</span><span class=w> </span><span class=s>&#34;username&#34;</span><span class=p>,</span><span class=w> </span><span class=n>unique</span><span class=w> </span><span class=o>=</span><span class=w> </span><span class=kc>true</span><span class=p>,</span><span class=w> </span><span class=n>nullable</span><span class=w> </span><span class=o>=</span><span class=w> </span><span class=kc>false</span><span class=p>)</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>    </span><span class=kd>private</span><span class=w> </span><span class=n>String</span><span class=w> </span><span class=n>username</span><span class=p>;</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>    
+</span></span></span><span class=line><span class=cl><span class=w>    </span><span class=nd>@Column</span><span class=p>(</span><span class=n>name</span><span class=w> </span><span class=o>=</span><span class=w> </span><span class=s>&#34;email&#34;</span><span class=p>,</span><span class=w> </span><span class=n>unique</span><span class=w> </span><span class=o>=</span><span class=w> </span><span class=kc>true</span><span class=p>,</span><span class=w> </span><span class=n>nullable</span><span class=w> </span><span class=o>=</span><span class=w> </span><span class=kc>false</span><span class=p>)</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>    </span><span class=kd>private</span><span class=w> </span><span class=n>String</span><span class=w> </span><span class=n>email</span><span class=p>;</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>    
+</span></span></span><span class=line><span class=cl><span class=w>    </span><span class=nd>@Column</span><span class=p>(</span><span class=n>name</span><span class=w> </span><span class=o>=</span><span class=w> </span><span class=s>&#34;first_name&#34;</span><span class=p>)</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>    </span><span class=kd>private</span><span class=w> </span><span class=n>String</span><span class=w> </span><span class=n>firstName</span><span class=p>;</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>    
+</span></span></span><span class=line><span class=cl><span class=w>    </span><span class=nd>@Column</span><span class=p>(</span><span class=n>name</span><span class=w> </span><span class=o>=</span><span class=w> </span><span class=s>&#34;last_name&#34;</span><span class=p>)</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>    </span><span class=kd>private</span><span class=w> </span><span class=n>String</span><span class=w> </span><span class=n>lastName</span><span class=p>;</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>    
+</span></span></span><span class=line><span class=cl><span class=w>    </span><span class=nd>@Enumerated</span><span class=p>(</span><span class=n>EnumType</span><span class=p>.</span><span class=na>STRING</span><span class=p>)</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>    </span><span class=nd>@Column</span><span class=p>(</span><span class=n>name</span><span class=w> </span><span class=o>=</span><span class=w> </span><span class=s>&#34;status&#34;</span><span class=p>)</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>    </span><span class=kd>private</span><span class=w> </span><span class=n>UserStatus</span><span class=w> </span><span class=n>status</span><span class=w> </span><span class=o>=</span><span class=w> </span><span class=n>UserStatus</span><span class=p>.</span><span class=na>ACTIVE</span><span class=p>;</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>    
+</span></span></span><span class=line><span class=cl><span class=w>    </span><span class=nd>@CreationTimestamp</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>    </span><span class=nd>@Column</span><span class=p>(</span><span class=n>name</span><span class=w> </span><span class=o>=</span><span class=w> </span><span class=s>&#34;created_at&#34;</span><span class=p>,</span><span class=w> </span><span class=n>updatable</span><span class=w> </span><span class=o>=</span><span class=w> </span><span class=kc>false</span><span class=p>)</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>    </span><span class=kd>private</span><span class=w> </span><span class=n>LocalDateTime</span><span class=w> </span><span class=n>createdAt</span><span class=p>;</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>    
+</span></span></span><span class=line><span class=cl><span class=w>    </span><span class=nd>@UpdateTimestamp</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>    </span><span class=nd>@Column</span><span class=p>(</span><span class=n>name</span><span class=w> </span><span class=o>=</span><span class=w> </span><span class=s>&#34;updated_at&#34;</span><span class=p>)</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>    </span><span class=kd>private</span><span class=w> </span><span class=n>LocalDateTime</span><span class=w> </span><span class=n>updatedAt</span><span class=p>;</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>    
+</span></span></span><span class=line><span class=cl><span class=w>    </span><span class=c1>// Constructors, getters, setters</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w></span><span class=p>}</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w></span><span class=kd>public</span><span class=w> </span><span class=kd>enum</span><span class=w> </span><span class=n>UserStatus</span><span class=w> </span><span class=p>{</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>    </span><span class=n>ACTIVE</span><span class=p>,</span><span class=w> </span><span class=n>INACTIVE</span><span class=p>,</span><span class=w> </span><span class=n>SUSPENDED</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w></span><span class=p>}</span><span class=w>
+</span></span></span></code></pre></td></tr></table></div></div><h3 id=2-relationship-mapping>2. Relationship Mapping<a hidden class=anchor aria-hidden=true href=#2-relationship-mapping>#</a></h3><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span><span class=lnt>12
+</span><span class=lnt>13
+</span><span class=lnt>14
+</span><span class=lnt>15
+</span><span class=lnt>16
+</span><span class=lnt>17
+</span><span class=lnt>18
+</span><span class=lnt>19
+</span><span class=lnt>20
+</span><span class=lnt>21
+</span><span class=lnt>22
+</span><span class=lnt>23
+</span><span class=lnt>24
+</span><span class=lnt>25
+</span><span class=lnt>26
+</span><span class=lnt>27
+</span><span class=lnt>28
+</span><span class=lnt>29
+</span><span class=lnt>30
+</span><span class=lnt>31
+</span><span class=lnt>32
+</span><span class=lnt>33
+</span><span class=lnt>34
+</span><span class=lnt>35
+</span><span class=lnt>36
+</span><span class=lnt>37
+</span><span class=lnt>38
+</span><span class=lnt>39
+</span><span class=lnt>40
+</span><span class=lnt>41
+</span><span class=lnt>42
+</span><span class=lnt>43
+</span><span class=lnt>44
+</span><span class=lnt>45
+</span><span class=lnt>46
+</span><span class=lnt>47
+</span><span class=lnt>48
+</span><span class=lnt>49
+</span><span class=lnt>50
+</span><span class=lnt>51
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-java data-lang=java><span class=line><span class=cl><span class=nd>@Entity</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w></span><span class=nd>@Table</span><span class=p>(</span><span class=n>name</span><span class=w> </span><span class=o>=</span><span class=w> </span><span class=s>&#34;orders&#34;</span><span class=p>)</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w></span><span class=kd>public</span><span class=w> </span><span class=kd>class</span> <span class=nc>Order</span><span class=w> </span><span class=p>{</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>    </span><span class=nd>@Id</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>    </span><span class=nd>@GeneratedValue</span><span class=p>(</span><span class=n>strategy</span><span class=w> </span><span class=o>=</span><span class=w> </span><span class=n>GenerationType</span><span class=p>.</span><span class=na>IDENTITY</span><span class=p>)</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>    </span><span class=kd>private</span><span class=w> </span><span class=n>Long</span><span class=w> </span><span class=n>id</span><span class=p>;</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>    
+</span></span></span><span class=line><span class=cl><span class=w>    </span><span class=nd>@ManyToOne</span><span class=p>(</span><span class=n>fetch</span><span class=w> </span><span class=o>=</span><span class=w> </span><span class=n>FetchType</span><span class=p>.</span><span class=na>LAZY</span><span class=p>)</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>    </span><span class=nd>@JoinColumn</span><span class=p>(</span><span class=n>name</span><span class=w> </span><span class=o>=</span><span class=w> </span><span class=s>&#34;user_id&#34;</span><span class=p>,</span><span class=w> </span><span class=n>nullable</span><span class=w> </span><span class=o>=</span><span class=w> </span><span class=kc>false</span><span class=p>)</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>    </span><span class=kd>private</span><span class=w> </span><span class=n>User</span><span class=w> </span><span class=n>user</span><span class=p>;</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>    
+</span></span></span><span class=line><span class=cl><span class=w>    </span><span class=nd>@OneToMany</span><span class=p>(</span><span class=n>mappedBy</span><span class=w> </span><span class=o>=</span><span class=w> </span><span class=s>&#34;order&#34;</span><span class=p>,</span><span class=w> </span><span class=n>cascade</span><span class=w> </span><span class=o>=</span><span class=w> </span><span class=n>CascadeType</span><span class=p>.</span><span class=na>ALL</span><span class=p>,</span><span class=w> </span><span class=n>fetch</span><span class=w> </span><span class=o>=</span><span class=w> </span><span class=n>FetchType</span><span class=p>.</span><span class=na>LAZY</span><span class=p>)</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>    </span><span class=kd>private</span><span class=w> </span><span class=n>List</span><span class=o>&lt;</span><span class=n>OrderItem</span><span class=o>&gt;</span><span class=w> </span><span class=n>items</span><span class=w> </span><span class=o>=</span><span class=w> </span><span class=k>new</span><span class=w> </span><span class=n>ArrayList</span><span class=o>&lt;&gt;</span><span class=p>();</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>    
+</span></span></span><span class=line><span class=cl><span class=w>    </span><span class=nd>@Column</span><span class=p>(</span><span class=n>name</span><span class=w> </span><span class=o>=</span><span class=w> </span><span class=s>&#34;total_amount&#34;</span><span class=p>,</span><span class=w> </span><span class=n>precision</span><span class=w> </span><span class=o>=</span><span class=w> </span><span class=n>10</span><span class=p>,</span><span class=w> </span><span class=n>scale</span><span class=w> </span><span class=o>=</span><span class=w> </span><span class=n>2</span><span class=p>)</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>    </span><span class=kd>private</span><span class=w> </span><span class=n>BigDecimal</span><span class=w> </span><span class=n>totalAmount</span><span class=p>;</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>    
+</span></span></span><span class=line><span class=cl><span class=w>    </span><span class=nd>@Enumerated</span><span class=p>(</span><span class=n>EnumType</span><span class=p>.</span><span class=na>STRING</span><span class=p>)</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>    </span><span class=nd>@Column</span><span class=p>(</span><span class=n>name</span><span class=w> </span><span class=o>=</span><span class=w> </span><span class=s>&#34;status&#34;</span><span class=p>)</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>    </span><span class=kd>private</span><span class=w> </span><span class=n>OrderStatus</span><span class=w> </span><span class=n>status</span><span class=w> </span><span class=o>=</span><span class=w> </span><span class=n>OrderStatus</span><span class=p>.</span><span class=na>PENDING</span><span class=p>;</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>    
+</span></span></span><span class=line><span class=cl><span class=w>    </span><span class=nd>@CreationTimestamp</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>    </span><span class=nd>@Column</span><span class=p>(</span><span class=n>name</span><span class=w> </span><span class=o>=</span><span class=w> </span><span class=s>&#34;created_at&#34;</span><span class=p>,</span><span class=w> </span><span class=n>updatable</span><span class=w> </span><span class=o>=</span><span class=w> </span><span class=kc>false</span><span class=p>)</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>    </span><span class=kd>private</span><span class=w> </span><span class=n>LocalDateTime</span><span class=w> </span><span class=n>createdAt</span><span class=p>;</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>    
+</span></span></span><span class=line><span class=cl><span class=w>    </span><span class=c1>// Constructors, getters, setters</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w></span><span class=p>}</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w></span><span class=nd>@Entity</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w></span><span class=nd>@Table</span><span class=p>(</span><span class=n>name</span><span class=w> </span><span class=o>=</span><span class=w> </span><span class=s>&#34;order_items&#34;</span><span class=p>)</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w></span><span class=kd>public</span><span class=w> </span><span class=kd>class</span> <span class=nc>OrderItem</span><span class=w> </span><span class=p>{</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>    </span><span class=nd>@Id</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>    </span><span class=nd>@GeneratedValue</span><span class=p>(</span><span class=n>strategy</span><span class=w> </span><span class=o>=</span><span class=w> </span><span class=n>GenerationType</span><span class=p>.</span><span class=na>IDENTITY</span><span class=p>)</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>    </span><span class=kd>private</span><span class=w> </span><span class=n>Long</span><span class=w> </span><span class=n>id</span><span class=p>;</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>    
+</span></span></span><span class=line><span class=cl><span class=w>    </span><span class=nd>@ManyToOne</span><span class=p>(</span><span class=n>fetch</span><span class=w> </span><span class=o>=</span><span class=w> </span><span class=n>FetchType</span><span class=p>.</span><span class=na>LAZY</span><span class=p>)</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>    </span><span class=nd>@JoinColumn</span><span class=p>(</span><span class=n>name</span><span class=w> </span><span class=o>=</span><span class=w> </span><span class=s>&#34;order_id&#34;</span><span class=p>,</span><span class=w> </span><span class=n>nullable</span><span class=w> </span><span class=o>=</span><span class=w> </span><span class=kc>false</span><span class=p>)</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>    </span><span class=kd>private</span><span class=w> </span><span class=n>Order</span><span class=w> </span><span class=n>order</span><span class=p>;</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>    
+</span></span></span><span class=line><span class=cl><span class=w>    </span><span class=nd>@ManyToOne</span><span class=p>(</span><span class=n>fetch</span><span class=w> </span><span class=o>=</span><span class=w> </span><span class=n>FetchType</span><span class=p>.</span><span class=na>LAZY</span><span class=p>)</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>    </span><span class=nd>@JoinColumn</span><span class=p>(</span><span class=n>name</span><span class=w> </span><span class=o>=</span><span class=w> </span><span class=s>&#34;product_id&#34;</span><span class=p>,</span><span class=w> </span><span class=n>nullable</span><span class=w> </span><span class=o>=</span><span class=w> </span><span class=kc>false</span><span class=p>)</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>    </span><span class=kd>private</span><span class=w> </span><span class=n>Product</span><span class=w> </span><span class=n>product</span><span class=p>;</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>    
+</span></span></span><span class=line><span class=cl><span class=w>    </span><span class=nd>@Column</span><span class=p>(</span><span class=n>name</span><span class=w> </span><span class=o>=</span><span class=w> </span><span class=s>&#34;quantity&#34;</span><span class=p>,</span><span class=w> </span><span class=n>nullable</span><span class=w> </span><span class=o>=</span><span class=w> </span><span class=kc>false</span><span class=p>)</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>    </span><span class=kd>private</span><span class=w> </span><span class=n>Integer</span><span class=w> </span><span class=n>quantity</span><span class=p>;</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>    
+</span></span></span><span class=line><span class=cl><span class=w>    </span><span class=nd>@Column</span><span class=p>(</span><span class=n>name</span><span class=w> </span><span class=o>=</span><span class=w> </span><span class=s>&#34;price&#34;</span><span class=p>,</span><span class=w> </span><span class=n>precision</span><span class=w> </span><span class=o>=</span><span class=w> </span><span class=n>10</span><span class=p>,</span><span class=w> </span><span class=n>scale</span><span class=w> </span><span class=o>=</span><span class=w> </span><span class=n>2</span><span class=p>,</span><span class=w> </span><span class=n>nullable</span><span class=w> </span><span class=o>=</span><span class=w> </span><span class=kc>false</span><span class=p>)</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>    </span><span class=kd>private</span><span class=w> </span><span class=n>BigDecimal</span><span class=w> </span><span class=n>price</span><span class=p>;</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>    
+</span></span></span><span class=line><span class=cl><span class=w>    </span><span class=c1>// Constructors, getters, setters</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w></span><span class=p>}</span><span class=w>
+</span></span></span></code></pre></td></tr></table></div></div><h2 id=repository-layer>Repository Layer<a hidden class=anchor aria-hidden=true href=#repository-layer>#</a></h2><h3 id=1-basic-repository>1. Basic Repository<a hidden class=anchor aria-hidden=true href=#1-basic-repository>#</a></h3><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span><span class=lnt>12
+</span><span class=lnt>13
+</span><span class=lnt>14
+</span><span class=lnt>15
+</span><span class=lnt>16
+</span><span class=lnt>17
+</span><span class=lnt>18
+</span><span class=lnt>19
+</span><span class=lnt>20
+</span><span class=lnt>21
+</span><span class=lnt>22
+</span><span class=lnt>23
+</span><span class=lnt>24
+</span><span class=lnt>25
+</span><span class=lnt>26
+</span><span class=lnt>27
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-java data-lang=java><span class=line><span class=cl><span class=nd>@Repository</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w></span><span class=kd>public</span><span class=w> </span><span class=kd>interface</span> <span class=nc>UserRepository</span><span class=w> </span><span class=kd>extends</span><span class=w> </span><span class=n>JpaRepository</span><span class=o>&lt;</span><span class=n>User</span><span class=p>,</span><span class=w> </span><span class=n>Long</span><span class=o>&gt;</span><span class=w> </span><span class=p>{</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>    </span><span class=c1>// Query methods</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>    </span><span class=n>Optional</span><span class=o>&lt;</span><span class=n>User</span><span class=o>&gt;</span><span class=w> </span><span class=nf>findByUsername</span><span class=p>(</span><span class=n>String</span><span class=w> </span><span class=n>username</span><span class=p>);</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>    </span><span class=n>Optional</span><span class=o>&lt;</span><span class=n>User</span><span class=o>&gt;</span><span class=w> </span><span class=nf>findByEmail</span><span class=p>(</span><span class=n>String</span><span class=w> </span><span class=n>email</span><span class=p>);</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>    </span><span class=n>List</span><span class=o>&lt;</span><span class=n>User</span><span class=o>&gt;</span><span class=w> </span><span class=nf>findByStatus</span><span class=p>(</span><span class=n>UserStatus</span><span class=w> </span><span class=n>status</span><span class=p>);</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>    </span><span class=n>List</span><span class=o>&lt;</span><span class=n>User</span><span class=o>&gt;</span><span class=w> </span><span class=nf>findByFirstNameContainingIgnoreCase</span><span class=p>(</span><span class=n>String</span><span class=w> </span><span class=n>firstName</span><span class=p>);</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>    </span><span class=n>List</span><span class=o>&lt;</span><span class=n>User</span><span class=o>&gt;</span><span class=w> </span><span class=nf>findByCreatedAtBetween</span><span class=p>(</span><span class=n>LocalDateTime</span><span class=w> </span><span class=n>start</span><span class=p>,</span><span class=w> </span><span class=n>LocalDateTime</span><span class=w> </span><span class=n>end</span><span class=p>);</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>    
+</span></span></span><span class=line><span class=cl><span class=w>    </span><span class=c1>// Custom queries</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>    </span><span class=nd>@Query</span><span class=p>(</span><span class=s>&#34;SELECT u FROM User u WHERE u.status = :status AND u.createdAt &gt;= :date&#34;</span><span class=p>)</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>    </span><span class=n>List</span><span class=o>&lt;</span><span class=n>User</span><span class=o>&gt;</span><span class=w> </span><span class=nf>findActiveUsersAfterDate</span><span class=p>(</span><span class=nd>@Param</span><span class=p>(</span><span class=s>&#34;status&#34;</span><span class=p>)</span><span class=w> </span><span class=n>UserStatus</span><span class=w> </span><span class=n>status</span><span class=p>,</span><span class=w> 
+</span></span></span><span class=line><span class=cl><span class=w>                                       </span><span class=nd>@Param</span><span class=p>(</span><span class=s>&#34;date&#34;</span><span class=p>)</span><span class=w> </span><span class=n>LocalDateTime</span><span class=w> </span><span class=n>date</span><span class=p>);</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>    
+</span></span></span><span class=line><span class=cl><span class=w>    </span><span class=nd>@Query</span><span class=p>(</span><span class=n>value</span><span class=w> </span><span class=o>=</span><span class=w> </span><span class=s>&#34;SELECT * FROM users WHERE first_name LIKE %:name%&#34;</span><span class=p>,</span><span class=w> </span><span class=n>nativeQuery</span><span class=w> </span><span class=o>=</span><span class=w> </span><span class=kc>true</span><span class=p>)</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>    </span><span class=n>List</span><span class=o>&lt;</span><span class=n>User</span><span class=o>&gt;</span><span class=w> </span><span class=nf>findUsersByNameNative</span><span class=p>(</span><span class=nd>@Param</span><span class=p>(</span><span class=s>&#34;name&#34;</span><span class=p>)</span><span class=w> </span><span class=n>String</span><span class=w> </span><span class=n>name</span><span class=p>);</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>    
+</span></span></span><span class=line><span class=cl><span class=w>    </span><span class=c1>// Exists queries</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>    </span><span class=kt>boolean</span><span class=w> </span><span class=nf>existsByUsername</span><span class=p>(</span><span class=n>String</span><span class=w> </span><span class=n>username</span><span class=p>);</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>    </span><span class=kt>boolean</span><span class=w> </span><span class=nf>existsByEmail</span><span class=p>(</span><span class=n>String</span><span class=w> </span><span class=n>email</span><span class=p>);</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>    
+</span></span></span><span class=line><span class=cl><span class=w>    </span><span class=c1>// Count queries</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>    </span><span class=kt>long</span><span class=w> </span><span class=nf>countByStatus</span><span class=p>(</span><span class=n>UserStatus</span><span class=w> </span><span class=n>status</span><span class=p>);</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>    
+</span></span></span><span class=line><span class=cl><span class=w>    </span><span class=c1>// Delete queries</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>    </span><span class=kt>void</span><span class=w> </span><span class=nf>deleteByStatus</span><span class=p>(</span><span class=n>UserStatus</span><span class=w> </span><span class=n>status</span><span class=p>);</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w></span><span class=p>}</span><span class=w>
+</span></span></span></code></pre></td></tr></table></div></div><h3 id=2-custom-repository-implementation>2. Custom Repository Implementation<a hidden class=anchor aria-hidden=true href=#2-custom-repository-implementation>#</a></h3><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span><span class=lnt>12
+</span><span class=lnt>13
+</span><span class=lnt>14
+</span><span class=lnt>15
+</span><span class=lnt>16
+</span><span class=lnt>17
+</span><span class=lnt>18
+</span><span class=lnt>19
+</span><span class=lnt>20
+</span><span class=lnt>21
+</span><span class=lnt>22
+</span><span class=lnt>23
+</span><span class=lnt>24
+</span><span class=lnt>25
+</span><span class=lnt>26
+</span><span class=lnt>27
+</span><span class=lnt>28
+</span><span class=lnt>29
+</span><span class=lnt>30
+</span><span class=lnt>31
+</span><span class=lnt>32
+</span><span class=lnt>33
+</span><span class=lnt>34
+</span><span class=lnt>35
+</span><span class=lnt>36
+</span><span class=lnt>37
+</span><span class=lnt>38
+</span><span class=lnt>39
+</span><span class=lnt>40
+</span><span class=lnt>41
+</span><span class=lnt>42
+</span><span class=lnt>43
+</span><span class=lnt>44
+</span><span class=lnt>45
+</span><span class=lnt>46
+</span><span class=lnt>47
+</span><span class=lnt>48
+</span><span class=lnt>49
+</span><span class=lnt>50
+</span><span class=lnt>51
+</span><span class=lnt>52
+</span><span class=lnt>53
+</span><span class=lnt>54
+</span><span class=lnt>55
+</span><span class=lnt>56
+</span><span class=lnt>57
+</span><span class=lnt>58
+</span><span class=lnt>59
+</span><span class=lnt>60
+</span><span class=lnt>61
+</span><span class=lnt>62
+</span><span class=lnt>63
+</span><span class=lnt>64
+</span><span class=lnt>65
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-java data-lang=java><span class=line><span class=cl><span class=kd>public</span><span class=w> </span><span class=kd>interface</span> <span class=nc>UserRepositoryCustom</span><span class=w> </span><span class=p>{</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>    </span><span class=n>List</span><span class=o>&lt;</span><span class=n>User</span><span class=o>&gt;</span><span class=w> </span><span class=nf>findUsersWithComplexCriteria</span><span class=p>(</span><span class=n>UserSearchCriteria</span><span class=w> </span><span class=n>criteria</span><span class=p>);</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>    </span><span class=n>Page</span><span class=o>&lt;</span><span class=n>User</span><span class=o>&gt;</span><span class=w> </span><span class=nf>findUsersWithPagination</span><span class=p>(</span><span class=n>UserSearchCriteria</span><span class=w> </span><span class=n>criteria</span><span class=p>,</span><span class=w> </span><span class=n>Pageable</span><span class=w> </span><span class=n>pageable</span><span class=p>);</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w></span><span class=p>}</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w></span><span class=nd>@Repository</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w></span><span class=kd>public</span><span class=w> </span><span class=kd>class</span> <span class=nc>UserRepositoryImpl</span><span class=w> </span><span class=kd>implements</span><span class=w> </span><span class=n>UserRepositoryCustom</span><span class=w> </span><span class=p>{</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>    
+</span></span></span><span class=line><span class=cl><span class=w>    </span><span class=nd>@PersistenceContext</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>    </span><span class=kd>private</span><span class=w> </span><span class=n>EntityManager</span><span class=w> </span><span class=n>entityManager</span><span class=p>;</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>    
+</span></span></span><span class=line><span class=cl><span class=w>    </span><span class=nd>@Override</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>    </span><span class=kd>public</span><span class=w> </span><span class=n>List</span><span class=o>&lt;</span><span class=n>User</span><span class=o>&gt;</span><span class=w> </span><span class=nf>findUsersWithComplexCriteria</span><span class=p>(</span><span class=n>UserSearchCriteria</span><span class=w> </span><span class=n>criteria</span><span class=p>)</span><span class=w> </span><span class=p>{</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>        </span><span class=n>CriteriaBuilder</span><span class=w> </span><span class=n>cb</span><span class=w> </span><span class=o>=</span><span class=w> </span><span class=n>entityManager</span><span class=p>.</span><span class=na>getCriteriaBuilder</span><span class=p>();</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>        </span><span class=n>CriteriaQuery</span><span class=o>&lt;</span><span class=n>User</span><span class=o>&gt;</span><span class=w> </span><span class=n>query</span><span class=w> </span><span class=o>=</span><span class=w> </span><span class=n>cb</span><span class=p>.</span><span class=na>createQuery</span><span class=p>(</span><span class=n>User</span><span class=p>.</span><span class=na>class</span><span class=p>);</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>        </span><span class=n>Root</span><span class=o>&lt;</span><span class=n>User</span><span class=o>&gt;</span><span class=w> </span><span class=n>user</span><span class=w> </span><span class=o>=</span><span class=w> </span><span class=n>query</span><span class=p>.</span><span class=na>from</span><span class=p>(</span><span class=n>User</span><span class=p>.</span><span class=na>class</span><span class=p>);</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>        
+</span></span></span><span class=line><span class=cl><span class=w>        </span><span class=n>List</span><span class=o>&lt;</span><span class=n>Predicate</span><span class=o>&gt;</span><span class=w> </span><span class=n>predicates</span><span class=w> </span><span class=o>=</span><span class=w> </span><span class=k>new</span><span class=w> </span><span class=n>ArrayList</span><span class=o>&lt;&gt;</span><span class=p>();</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>        
+</span></span></span><span class=line><span class=cl><span class=w>        </span><span class=k>if</span><span class=w> </span><span class=p>(</span><span class=n>criteria</span><span class=p>.</span><span class=na>getUsername</span><span class=p>()</span><span class=w> </span><span class=o>!=</span><span class=w> </span><span class=kc>null</span><span class=p>)</span><span class=w> </span><span class=p>{</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>            </span><span class=n>predicates</span><span class=p>.</span><span class=na>add</span><span class=p>(</span><span class=n>cb</span><span class=p>.</span><span class=na>like</span><span class=p>(</span><span class=n>user</span><span class=p>.</span><span class=na>get</span><span class=p>(</span><span class=s>&#34;username&#34;</span><span class=p>),</span><span class=w> </span><span class=s>&#34;%&#34;</span><span class=w> </span><span class=o>+</span><span class=w> </span><span class=n>criteria</span><span class=p>.</span><span class=na>getUsername</span><span class=p>()</span><span class=w> </span><span class=o>+</span><span class=w> </span><span class=s>&#34;%&#34;</span><span class=p>));</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>        </span><span class=p>}</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>        
+</span></span></span><span class=line><span class=cl><span class=w>        </span><span class=k>if</span><span class=w> </span><span class=p>(</span><span class=n>criteria</span><span class=p>.</span><span class=na>getStatus</span><span class=p>()</span><span class=w> </span><span class=o>!=</span><span class=w> </span><span class=kc>null</span><span class=p>)</span><span class=w> </span><span class=p>{</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>            </span><span class=n>predicates</span><span class=p>.</span><span class=na>add</span><span class=p>(</span><span class=n>cb</span><span class=p>.</span><span class=na>equal</span><span class=p>(</span><span class=n>user</span><span class=p>.</span><span class=na>get</span><span class=p>(</span><span class=s>&#34;status&#34;</span><span class=p>),</span><span class=w> </span><span class=n>criteria</span><span class=p>.</span><span class=na>getStatus</span><span class=p>()));</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>        </span><span class=p>}</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>        
+</span></span></span><span class=line><span class=cl><span class=w>        </span><span class=k>if</span><span class=w> </span><span class=p>(</span><span class=n>criteria</span><span class=p>.</span><span class=na>getStartDate</span><span class=p>()</span><span class=w> </span><span class=o>!=</span><span class=w> </span><span class=kc>null</span><span class=p>)</span><span class=w> </span><span class=p>{</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>            </span><span class=n>predicates</span><span class=p>.</span><span class=na>add</span><span class=p>(</span><span class=n>cb</span><span class=p>.</span><span class=na>greaterThanOrEqualTo</span><span class=p>(</span><span class=n>user</span><span class=p>.</span><span class=na>get</span><span class=p>(</span><span class=s>&#34;createdAt&#34;</span><span class=p>),</span><span class=w> </span><span class=n>criteria</span><span class=p>.</span><span class=na>getStartDate</span><span class=p>()));</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>        </span><span class=p>}</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>        
+</span></span></span><span class=line><span class=cl><span class=w>        </span><span class=k>if</span><span class=w> </span><span class=p>(</span><span class=n>criteria</span><span class=p>.</span><span class=na>getEndDate</span><span class=p>()</span><span class=w> </span><span class=o>!=</span><span class=w> </span><span class=kc>null</span><span class=p>)</span><span class=w> </span><span class=p>{</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>            </span><span class=n>predicates</span><span class=p>.</span><span class=na>add</span><span class=p>(</span><span class=n>cb</span><span class=p>.</span><span class=na>lessThanOrEqualTo</span><span class=p>(</span><span class=n>user</span><span class=p>.</span><span class=na>get</span><span class=p>(</span><span class=s>&#34;createdAt&#34;</span><span class=p>),</span><span class=w> </span><span class=n>criteria</span><span class=p>.</span><span class=na>getEndDate</span><span class=p>()));</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>        </span><span class=p>}</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>        
+</span></span></span><span class=line><span class=cl><span class=w>        </span><span class=n>query</span><span class=p>.</span><span class=na>where</span><span class=p>(</span><span class=n>predicates</span><span class=p>.</span><span class=na>toArray</span><span class=p>(</span><span class=k>new</span><span class=w> </span><span class=n>Predicate</span><span class=o>[</span><span class=n>0</span><span class=o>]</span><span class=p>));</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>        
+</span></span></span><span class=line><span class=cl><span class=w>        </span><span class=k>return</span><span class=w> </span><span class=n>entityManager</span><span class=p>.</span><span class=na>createQuery</span><span class=p>(</span><span class=n>query</span><span class=p>).</span><span class=na>getResultList</span><span class=p>();</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>    </span><span class=p>}</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>    
+</span></span></span><span class=line><span class=cl><span class=w>    </span><span class=nd>@Override</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>    </span><span class=kd>public</span><span class=w> </span><span class=n>Page</span><span class=o>&lt;</span><span class=n>User</span><span class=o>&gt;</span><span class=w> </span><span class=nf>findUsersWithPagination</span><span class=p>(</span><span class=n>UserSearchCriteria</span><span class=w> </span><span class=n>criteria</span><span class=p>,</span><span class=w> </span><span class=n>Pageable</span><span class=w> </span><span class=n>pageable</span><span class=p>)</span><span class=w> </span><span class=p>{</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>        </span><span class=n>CriteriaBuilder</span><span class=w> </span><span class=n>cb</span><span class=w> </span><span class=o>=</span><span class=w> </span><span class=n>entityManager</span><span class=p>.</span><span class=na>getCriteriaBuilder</span><span class=p>();</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>        </span><span class=n>CriteriaQuery</span><span class=o>&lt;</span><span class=n>User</span><span class=o>&gt;</span><span class=w> </span><span class=n>query</span><span class=w> </span><span class=o>=</span><span class=w> </span><span class=n>cb</span><span class=p>.</span><span class=na>createQuery</span><span class=p>(</span><span class=n>User</span><span class=p>.</span><span class=na>class</span><span class=p>);</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>        </span><span class=n>Root</span><span class=o>&lt;</span><span class=n>User</span><span class=o>&gt;</span><span class=w> </span><span class=n>user</span><span class=w> </span><span class=o>=</span><span class=w> </span><span class=n>query</span><span class=p>.</span><span class=na>from</span><span class=p>(</span><span class=n>User</span><span class=p>.</span><span class=na>class</span><span class=p>);</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>        
+</span></span></span><span class=line><span class=cl><span class=w>        </span><span class=c1>// Add predicates...</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>        
+</span></span></span><span class=line><span class=cl><span class=w>        </span><span class=n>query</span><span class=p>.</span><span class=na>where</span><span class=p>(</span><span class=n>predicates</span><span class=p>.</span><span class=na>toArray</span><span class=p>(</span><span class=k>new</span><span class=w> </span><span class=n>Predicate</span><span class=o>[</span><span class=n>0</span><span class=o>]</span><span class=p>));</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>        
+</span></span></span><span class=line><span class=cl><span class=w>        </span><span class=n>List</span><span class=o>&lt;</span><span class=n>User</span><span class=o>&gt;</span><span class=w> </span><span class=n>users</span><span class=w> </span><span class=o>=</span><span class=w> </span><span class=n>entityManager</span><span class=p>.</span><span class=na>createQuery</span><span class=p>(</span><span class=n>query</span><span class=p>)</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>            </span><span class=p>.</span><span class=na>setFirstResult</span><span class=p>((</span><span class=kt>int</span><span class=p>)</span><span class=w> </span><span class=n>pageable</span><span class=p>.</span><span class=na>getOffset</span><span class=p>())</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>            </span><span class=p>.</span><span class=na>setMaxResults</span><span class=p>(</span><span class=n>pageable</span><span class=p>.</span><span class=na>getPageSize</span><span class=p>())</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>            </span><span class=p>.</span><span class=na>getResultList</span><span class=p>();</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>        
+</span></span></span><span class=line><span class=cl><span class=w>        </span><span class=c1>// Count query</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>        </span><span class=n>CriteriaQuery</span><span class=o>&lt;</span><span class=n>Long</span><span class=o>&gt;</span><span class=w> </span><span class=n>countQuery</span><span class=w> </span><span class=o>=</span><span class=w> </span><span class=n>cb</span><span class=p>.</span><span class=na>createQuery</span><span class=p>(</span><span class=n>Long</span><span class=p>.</span><span class=na>class</span><span class=p>);</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>        </span><span class=n>countQuery</span><span class=p>.</span><span class=na>select</span><span class=p>(</span><span class=n>cb</span><span class=p>.</span><span class=na>count</span><span class=p>(</span><span class=n>countQuery</span><span class=p>.</span><span class=na>from</span><span class=p>(</span><span class=n>User</span><span class=p>.</span><span class=na>class</span><span class=p>)));</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>        </span><span class=n>countQuery</span><span class=p>.</span><span class=na>where</span><span class=p>(</span><span class=n>predicates</span><span class=p>.</span><span class=na>toArray</span><span class=p>(</span><span class=k>new</span><span class=w> </span><span class=n>Predicate</span><span class=o>[</span><span class=n>0</span><span class=o>]</span><span class=p>));</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>        
+</span></span></span><span class=line><span class=cl><span class=w>        </span><span class=n>Long</span><span class=w> </span><span class=n>total</span><span class=w> </span><span class=o>=</span><span class=w> </span><span class=n>entityManager</span><span class=p>.</span><span class=na>createQuery</span><span class=p>(</span><span class=n>countQuery</span><span class=p>).</span><span class=na>getSingleResult</span><span class=p>();</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>        
+</span></span></span><span class=line><span class=cl><span class=w>        </span><span class=k>return</span><span class=w> </span><span class=k>new</span><span class=w> </span><span class=n>PageImpl</span><span class=o>&lt;&gt;</span><span class=p>(</span><span class=n>users</span><span class=p>,</span><span class=w> </span><span class=n>pageable</span><span class=p>,</span><span class=w> </span><span class=n>total</span><span class=p>);</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>    </span><span class=p>}</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w></span><span class=p>}</span><span class=w>
+</span></span></span></code></pre></td></tr></table></div></div><h2 id=service-layer>Service Layer<a hidden class=anchor aria-hidden=true href=#service-layer>#</a></h2><h3 id=1-basic-service>1. Basic Service<a hidden class=anchor aria-hidden=true href=#1-basic-service>#</a></h3><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span><span class=lnt>12
+</span><span class=lnt>13
+</span><span class=lnt>14
+</span><span class=lnt>15
+</span><span class=lnt>16
+</span><span class=lnt>17
+</span><span class=lnt>18
+</span><span class=lnt>19
+</span><span class=lnt>20
+</span><span class=lnt>21
+</span><span class=lnt>22
+</span><span class=lnt>23
+</span><span class=lnt>24
+</span><span class=lnt>25
+</span><span class=lnt>26
+</span><span class=lnt>27
+</span><span class=lnt>28
+</span><span class=lnt>29
+</span><span class=lnt>30
+</span><span class=lnt>31
+</span><span class=lnt>32
+</span><span class=lnt>33
+</span><span class=lnt>34
+</span><span class=lnt>35
+</span><span class=lnt>36
+</span><span class=lnt>37
+</span><span class=lnt>38
+</span><span class=lnt>39
+</span><span class=lnt>40
+</span><span class=lnt>41
+</span><span class=lnt>42
+</span><span class=lnt>43
+</span><span class=lnt>44
+</span><span class=lnt>45
+</span><span class=lnt>46
+</span><span class=lnt>47
+</span><span class=lnt>48
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-java data-lang=java><span class=line><span class=cl><span class=nd>@Service</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w></span><span class=nd>@Transactional</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w></span><span class=kd>public</span><span class=w> </span><span class=kd>class</span> <span class=nc>UserService</span><span class=w> </span><span class=p>{</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>    
+</span></span></span><span class=line><span class=cl><span class=w>    </span><span class=nd>@Autowired</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>    </span><span class=kd>private</span><span class=w> </span><span class=n>UserRepository</span><span class=w> </span><span class=n>userRepository</span><span class=p>;</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>    
+</span></span></span><span class=line><span class=cl><span class=w>    </span><span class=kd>public</span><span class=w> </span><span class=n>List</span><span class=o>&lt;</span><span class=n>User</span><span class=o>&gt;</span><span class=w> </span><span class=nf>getAllUsers</span><span class=p>()</span><span class=w> </span><span class=p>{</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>        </span><span class=k>return</span><span class=w> </span><span class=n>userRepository</span><span class=p>.</span><span class=na>findAll</span><span class=p>();</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>    </span><span class=p>}</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>    
+</span></span></span><span class=line><span class=cl><span class=w>    </span><span class=kd>public</span><span class=w> </span><span class=n>Optional</span><span class=o>&lt;</span><span class=n>User</span><span class=o>&gt;</span><span class=w> </span><span class=nf>getUserById</span><span class=p>(</span><span class=n>Long</span><span class=w> </span><span class=n>id</span><span class=p>)</span><span class=w> </span><span class=p>{</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>        </span><span class=k>return</span><span class=w> </span><span class=n>userRepository</span><span class=p>.</span><span class=na>findById</span><span class=p>(</span><span class=n>id</span><span class=p>);</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>    </span><span class=p>}</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>    
+</span></span></span><span class=line><span class=cl><span class=w>    </span><span class=kd>public</span><span class=w> </span><span class=n>User</span><span class=w> </span><span class=nf>createUser</span><span class=p>(</span><span class=n>CreateUserRequest</span><span class=w> </span><span class=n>request</span><span class=p>)</span><span class=w> </span><span class=p>{</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>        </span><span class=k>if</span><span class=w> </span><span class=p>(</span><span class=n>userRepository</span><span class=p>.</span><span class=na>existsByUsername</span><span class=p>(</span><span class=n>request</span><span class=p>.</span><span class=na>getUsername</span><span class=p>()))</span><span class=w> </span><span class=p>{</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>            </span><span class=k>throw</span><span class=w> </span><span class=k>new</span><span class=w> </span><span class=n>RuntimeException</span><span class=p>(</span><span class=s>&#34;Username already exists&#34;</span><span class=p>);</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>        </span><span class=p>}</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>        
+</span></span></span><span class=line><span class=cl><span class=w>        </span><span class=k>if</span><span class=w> </span><span class=p>(</span><span class=n>userRepository</span><span class=p>.</span><span class=na>existsByEmail</span><span class=p>(</span><span class=n>request</span><span class=p>.</span><span class=na>getEmail</span><span class=p>()))</span><span class=w> </span><span class=p>{</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>            </span><span class=k>throw</span><span class=w> </span><span class=k>new</span><span class=w> </span><span class=n>RuntimeException</span><span class=p>(</span><span class=s>&#34;Email already exists&#34;</span><span class=p>);</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>        </span><span class=p>}</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>        
+</span></span></span><span class=line><span class=cl><span class=w>        </span><span class=n>User</span><span class=w> </span><span class=n>user</span><span class=w> </span><span class=o>=</span><span class=w> </span><span class=k>new</span><span class=w> </span><span class=n>User</span><span class=p>();</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>        </span><span class=n>user</span><span class=p>.</span><span class=na>setUsername</span><span class=p>(</span><span class=n>request</span><span class=p>.</span><span class=na>getUsername</span><span class=p>());</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>        </span><span class=n>user</span><span class=p>.</span><span class=na>setEmail</span><span class=p>(</span><span class=n>request</span><span class=p>.</span><span class=na>getEmail</span><span class=p>());</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>        </span><span class=n>user</span><span class=p>.</span><span class=na>setFirstName</span><span class=p>(</span><span class=n>request</span><span class=p>.</span><span class=na>getFirstName</span><span class=p>());</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>        </span><span class=n>user</span><span class=p>.</span><span class=na>setLastName</span><span class=p>(</span><span class=n>request</span><span class=p>.</span><span class=na>getLastName</span><span class=p>());</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>        
+</span></span></span><span class=line><span class=cl><span class=w>        </span><span class=k>return</span><span class=w> </span><span class=n>userRepository</span><span class=p>.</span><span class=na>save</span><span class=p>(</span><span class=n>user</span><span class=p>);</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>    </span><span class=p>}</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>    
+</span></span></span><span class=line><span class=cl><span class=w>    </span><span class=kd>public</span><span class=w> </span><span class=n>User</span><span class=w> </span><span class=nf>updateUser</span><span class=p>(</span><span class=n>Long</span><span class=w> </span><span class=n>id</span><span class=p>,</span><span class=w> </span><span class=n>UpdateUserRequest</span><span class=w> </span><span class=n>request</span><span class=p>)</span><span class=w> </span><span class=p>{</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>        </span><span class=n>User</span><span class=w> </span><span class=n>user</span><span class=w> </span><span class=o>=</span><span class=w> </span><span class=n>userRepository</span><span class=p>.</span><span class=na>findById</span><span class=p>(</span><span class=n>id</span><span class=p>)</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>            </span><span class=p>.</span><span class=na>orElseThrow</span><span class=p>(()</span><span class=w> </span><span class=o>-&gt;</span><span class=w> </span><span class=k>new</span><span class=w> </span><span class=n>RuntimeException</span><span class=p>(</span><span class=s>&#34;User not found&#34;</span><span class=p>));</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>        
+</span></span></span><span class=line><span class=cl><span class=w>        </span><span class=n>user</span><span class=p>.</span><span class=na>setFirstName</span><span class=p>(</span><span class=n>request</span><span class=p>.</span><span class=na>getFirstName</span><span class=p>());</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>        </span><span class=n>user</span><span class=p>.</span><span class=na>setLastName</span><span class=p>(</span><span class=n>request</span><span class=p>.</span><span class=na>getLastName</span><span class=p>());</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>        </span><span class=n>user</span><span class=p>.</span><span class=na>setEmail</span><span class=p>(</span><span class=n>request</span><span class=p>.</span><span class=na>getEmail</span><span class=p>());</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>        
+</span></span></span><span class=line><span class=cl><span class=w>        </span><span class=k>return</span><span class=w> </span><span class=n>userRepository</span><span class=p>.</span><span class=na>save</span><span class=p>(</span><span class=n>user</span><span class=p>);</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>    </span><span class=p>}</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>    
+</span></span></span><span class=line><span class=cl><span class=w>    </span><span class=kd>public</span><span class=w> </span><span class=kt>void</span><span class=w> </span><span class=nf>deleteUser</span><span class=p>(</span><span class=n>Long</span><span class=w> </span><span class=n>id</span><span class=p>)</span><span class=w> </span><span class=p>{</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>        </span><span class=n>userRepository</span><span class=p>.</span><span class=na>deleteById</span><span class=p>(</span><span class=n>id</span><span class=p>);</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>    </span><span class=p>}</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w></span><span class=p>}</span><span class=w>
+</span></span></span></code></pre></td></tr></table></div></div><h3 id=2-advanced-service-với-pagination>2. Advanced Service với Pagination<a hidden class=anchor aria-hidden=true href=#2-advanced-service-với-pagination>#</a></h3><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span><span class=lnt>12
+</span><span class=lnt>13
+</span><span class=lnt>14
+</span><span class=lnt>15
+</span><span class=lnt>16
+</span><span class=lnt>17
+</span><span class=lnt>18
+</span><span class=lnt>19
+</span><span class=lnt>20
+</span><span class=lnt>21
+</span><span class=lnt>22
+</span><span class=lnt>23
+</span><span class=lnt>24
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-java data-lang=java><span class=line><span class=cl><span class=nd>@Service</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w></span><span class=nd>@Transactional</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w></span><span class=kd>public</span><span class=w> </span><span class=kd>class</span> <span class=nc>UserService</span><span class=w> </span><span class=p>{</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>    
+</span></span></span><span class=line><span class=cl><span class=w>    </span><span class=nd>@Autowired</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>    </span><span class=kd>private</span><span class=w> </span><span class=n>UserRepository</span><span class=w> </span><span class=n>userRepository</span><span class=p>;</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>    
+</span></span></span><span class=line><span class=cl><span class=w>    </span><span class=kd>public</span><span class=w> </span><span class=n>Page</span><span class=o>&lt;</span><span class=n>User</span><span class=o>&gt;</span><span class=w> </span><span class=nf>getUsers</span><span class=p>(</span><span class=n>UserSearchCriteria</span><span class=w> </span><span class=n>criteria</span><span class=p>,</span><span class=w> </span><span class=n>Pageable</span><span class=w> </span><span class=n>pageable</span><span class=p>)</span><span class=w> </span><span class=p>{</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>        </span><span class=k>return</span><span class=w> </span><span class=n>userRepository</span><span class=p>.</span><span class=na>findUsersWithPagination</span><span class=p>(</span><span class=n>criteria</span><span class=p>,</span><span class=w> </span><span class=n>pageable</span><span class=p>);</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>    </span><span class=p>}</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>    
+</span></span></span><span class=line><span class=cl><span class=w>    </span><span class=kd>public</span><span class=w> </span><span class=n>List</span><span class=o>&lt;</span><span class=n>User</span><span class=o>&gt;</span><span class=w> </span><span class=nf>searchUsers</span><span class=p>(</span><span class=n>UserSearchCriteria</span><span class=w> </span><span class=n>criteria</span><span class=p>)</span><span class=w> </span><span class=p>{</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>        </span><span class=k>return</span><span class=w> </span><span class=n>userRepository</span><span class=p>.</span><span class=na>findUsersWithComplexCriteria</span><span class=p>(</span><span class=n>criteria</span><span class=p>);</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>    </span><span class=p>}</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>    
+</span></span></span><span class=line><span class=cl><span class=w>    </span><span class=nd>@Transactional</span><span class=p>(</span><span class=n>readOnly</span><span class=w> </span><span class=o>=</span><span class=w> </span><span class=kc>true</span><span class=p>)</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>    </span><span class=kd>public</span><span class=w> </span><span class=n>UserStatistics</span><span class=w> </span><span class=nf>getUserStatistics</span><span class=p>()</span><span class=w> </span><span class=p>{</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>        </span><span class=kt>long</span><span class=w> </span><span class=n>totalUsers</span><span class=w> </span><span class=o>=</span><span class=w> </span><span class=n>userRepository</span><span class=p>.</span><span class=na>count</span><span class=p>();</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>        </span><span class=kt>long</span><span class=w> </span><span class=n>activeUsers</span><span class=w> </span><span class=o>=</span><span class=w> </span><span class=n>userRepository</span><span class=p>.</span><span class=na>countByStatus</span><span class=p>(</span><span class=n>UserStatus</span><span class=p>.</span><span class=na>ACTIVE</span><span class=p>);</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>        </span><span class=kt>long</span><span class=w> </span><span class=n>inactiveUsers</span><span class=w> </span><span class=o>=</span><span class=w> </span><span class=n>userRepository</span><span class=p>.</span><span class=na>countByStatus</span><span class=p>(</span><span class=n>UserStatus</span><span class=p>.</span><span class=na>INACTIVE</span><span class=p>);</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>        
+</span></span></span><span class=line><span class=cl><span class=w>        </span><span class=k>return</span><span class=w> </span><span class=k>new</span><span class=w> </span><span class=n>UserStatistics</span><span class=p>(</span><span class=n>totalUsers</span><span class=p>,</span><span class=w> </span><span class=n>activeUsers</span><span class=p>,</span><span class=w> </span><span class=n>inactiveUsers</span><span class=p>);</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>    </span><span class=p>}</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w></span><span class=p>}</span><span class=w>
+</span></span></span></code></pre></td></tr></table></div></div><h2 id=pagination-và-sorting>Pagination và Sorting<a hidden class=anchor aria-hidden=true href=#pagination-và-sorting>#</a></h2><h3 id=1-controller-với-pagination>1. Controller với Pagination<a hidden class=anchor aria-hidden=true href=#1-controller-với-pagination>#</a></h3><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span><span class=lnt>12
+</span><span class=lnt>13
+</span><span class=lnt>14
+</span><span class=lnt>15
+</span><span class=lnt>16
+</span><span class=lnt>17
+</span><span class=lnt>18
+</span><span class=lnt>19
+</span><span class=lnt>20
+</span><span class=lnt>21
+</span><span class=lnt>22
+</span><span class=lnt>23
+</span><span class=lnt>24
+</span><span class=lnt>25
+</span><span class=lnt>26
+</span><span class=lnt>27
+</span><span class=lnt>28
+</span><span class=lnt>29
+</span><span class=lnt>30
+</span><span class=lnt>31
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-java data-lang=java><span class=line><span class=cl><span class=nd>@RestController</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w></span><span class=nd>@RequestMapping</span><span class=p>(</span><span class=s>&#34;/api/users&#34;</span><span class=p>)</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w></span><span class=kd>public</span><span class=w> </span><span class=kd>class</span> <span class=nc>UserController</span><span class=w> </span><span class=p>{</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>    
+</span></span></span><span class=line><span class=cl><span class=w>    </span><span class=nd>@Autowired</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>    </span><span class=kd>private</span><span class=w> </span><span class=n>UserService</span><span class=w> </span><span class=n>userService</span><span class=p>;</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>    
+</span></span></span><span class=line><span class=cl><span class=w>    </span><span class=nd>@GetMapping</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>    </span><span class=kd>public</span><span class=w> </span><span class=n>ResponseEntity</span><span class=o>&lt;</span><span class=n>Page</span><span class=o>&lt;</span><span class=n>User</span><span class=o>&gt;&gt;</span><span class=w> </span><span class=nf>getUsers</span><span class=p>(</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>            </span><span class=nd>@RequestParam</span><span class=p>(</span><span class=n>defaultValue</span><span class=w> </span><span class=o>=</span><span class=w> </span><span class=s>&#34;0&#34;</span><span class=p>)</span><span class=w> </span><span class=kt>int</span><span class=w> </span><span class=n>page</span><span class=p>,</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>            </span><span class=nd>@RequestParam</span><span class=p>(</span><span class=n>defaultValue</span><span class=w> </span><span class=o>=</span><span class=w> </span><span class=s>&#34;10&#34;</span><span class=p>)</span><span class=w> </span><span class=kt>int</span><span class=w> </span><span class=n>size</span><span class=p>,</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>            </span><span class=nd>@RequestParam</span><span class=p>(</span><span class=n>defaultValue</span><span class=w> </span><span class=o>=</span><span class=w> </span><span class=s>&#34;id&#34;</span><span class=p>)</span><span class=w> </span><span class=n>String</span><span class=w> </span><span class=n>sortBy</span><span class=p>,</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>            </span><span class=nd>@RequestParam</span><span class=p>(</span><span class=n>defaultValue</span><span class=w> </span><span class=o>=</span><span class=w> </span><span class=s>&#34;asc&#34;</span><span class=p>)</span><span class=w> </span><span class=n>String</span><span class=w> </span><span class=n>sortDir</span><span class=p>,</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>            </span><span class=nd>@RequestParam</span><span class=p>(</span><span class=n>required</span><span class=w> </span><span class=o>=</span><span class=w> </span><span class=kc>false</span><span class=p>)</span><span class=w> </span><span class=n>String</span><span class=w> </span><span class=n>search</span><span class=p>,</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>            </span><span class=nd>@RequestParam</span><span class=p>(</span><span class=n>required</span><span class=w> </span><span class=o>=</span><span class=w> </span><span class=kc>false</span><span class=p>)</span><span class=w> </span><span class=n>UserStatus</span><span class=w> </span><span class=n>status</span><span class=p>)</span><span class=w> </span><span class=p>{</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>        
+</span></span></span><span class=line><span class=cl><span class=w>        </span><span class=n>Sort</span><span class=w> </span><span class=n>sort</span><span class=w> </span><span class=o>=</span><span class=w> </span><span class=n>sortDir</span><span class=p>.</span><span class=na>equalsIgnoreCase</span><span class=p>(</span><span class=s>&#34;desc&#34;</span><span class=p>)</span><span class=w> 
+</span></span></span><span class=line><span class=cl><span class=w>            </span><span class=o>?</span><span class=w> </span><span class=n>Sort</span><span class=p>.</span><span class=na>by</span><span class=p>(</span><span class=n>sortBy</span><span class=p>).</span><span class=na>descending</span><span class=p>()</span><span class=w> 
+</span></span></span><span class=line><span class=cl><span class=w>            </span><span class=p>:</span><span class=w> </span><span class=n>Sort</span><span class=p>.</span><span class=na>by</span><span class=p>(</span><span class=n>sortBy</span><span class=p>).</span><span class=na>ascending</span><span class=p>();</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>        
+</span></span></span><span class=line><span class=cl><span class=w>        </span><span class=n>Pageable</span><span class=w> </span><span class=n>pageable</span><span class=w> </span><span class=o>=</span><span class=w> </span><span class=n>PageRequest</span><span class=p>.</span><span class=na>of</span><span class=p>(</span><span class=n>page</span><span class=p>,</span><span class=w> </span><span class=n>size</span><span class=p>,</span><span class=w> </span><span class=n>sort</span><span class=p>);</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>        
+</span></span></span><span class=line><span class=cl><span class=w>        </span><span class=n>UserSearchCriteria</span><span class=w> </span><span class=n>criteria</span><span class=w> </span><span class=o>=</span><span class=w> </span><span class=k>new</span><span class=w> </span><span class=n>UserSearchCriteria</span><span class=p>();</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>        </span><span class=n>criteria</span><span class=p>.</span><span class=na>setSearch</span><span class=p>(</span><span class=n>search</span><span class=p>);</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>        </span><span class=n>criteria</span><span class=p>.</span><span class=na>setStatus</span><span class=p>(</span><span class=n>status</span><span class=p>);</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>        
+</span></span></span><span class=line><span class=cl><span class=w>        </span><span class=n>Page</span><span class=o>&lt;</span><span class=n>User</span><span class=o>&gt;</span><span class=w> </span><span class=n>users</span><span class=w> </span><span class=o>=</span><span class=w> </span><span class=n>userService</span><span class=p>.</span><span class=na>getUsers</span><span class=p>(</span><span class=n>criteria</span><span class=p>,</span><span class=w> </span><span class=n>pageable</span><span class=p>);</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>        
+</span></span></span><span class=line><span class=cl><span class=w>        </span><span class=k>return</span><span class=w> </span><span class=n>ResponseEntity</span><span class=p>.</span><span class=na>ok</span><span class=p>(</span><span class=n>users</span><span class=p>);</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>    </span><span class=p>}</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w></span><span class=p>}</span><span class=w>
+</span></span></span></code></pre></td></tr></table></div></div><h2 id=caching>Caching<a hidden class=anchor aria-hidden=true href=#caching>#</a></h2><h3 id=1-enable-caching>1. Enable Caching<a hidden class=anchor aria-hidden=true href=#1-enable-caching>#</a></h3><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt>1
+</span><span class=lnt>2
+</span><span class=lnt>3
+</span><span class=lnt>4
+</span><span class=lnt>5
+</span><span class=lnt>6
+</span><span class=lnt>7
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-java data-lang=java><span class=line><span class=cl><span class=nd>@SpringBootApplication</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w></span><span class=nd>@EnableCaching</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w></span><span class=kd>public</span><span class=w> </span><span class=kd>class</span> <span class=nc>Application</span><span class=w> </span><span class=p>{</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>    </span><span class=kd>public</span><span class=w> </span><span class=kd>static</span><span class=w> </span><span class=kt>void</span><span class=w> </span><span class=nf>main</span><span class=p>(</span><span class=n>String</span><span class=o>[]</span><span class=w> </span><span class=n>args</span><span class=p>)</span><span class=w> </span><span class=p>{</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>        </span><span class=n>SpringApplication</span><span class=p>.</span><span class=na>run</span><span class=p>(</span><span class=n>Application</span><span class=p>.</span><span class=na>class</span><span class=p>,</span><span class=w> </span><span class=n>args</span><span class=p>);</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>    </span><span class=p>}</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w></span><span class=p>}</span><span class=w>
+</span></span></span></code></pre></td></tr></table></div></div><h3 id=2-cache-configuration>2. Cache Configuration<a hidden class=anchor aria-hidden=true href=#2-cache-configuration>#</a></h3><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span><span class=lnt>12
+</span><span class=lnt>13
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-java data-lang=java><span class=line><span class=cl><span class=nd>@Configuration</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w></span><span class=nd>@EnableCaching</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w></span><span class=kd>public</span><span class=w> </span><span class=kd>class</span> <span class=nc>CacheConfig</span><span class=w> </span><span class=p>{</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>    
+</span></span></span><span class=line><span class=cl><span class=w>    </span><span class=nd>@Bean</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>    </span><span class=kd>public</span><span class=w> </span><span class=n>CacheManager</span><span class=w> </span><span class=nf>cacheManager</span><span class=p>()</span><span class=w> </span><span class=p>{</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>        </span><span class=n>CaffeineCacheManager</span><span class=w> </span><span class=n>cacheManager</span><span class=w> </span><span class=o>=</span><span class=w> </span><span class=k>new</span><span class=w> </span><span class=n>CaffeineCacheManager</span><span class=p>();</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>        </span><span class=n>cacheManager</span><span class=p>.</span><span class=na>setCaffeine</span><span class=p>(</span><span class=n>Caffeine</span><span class=p>.</span><span class=na>newBuilder</span><span class=p>()</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>            </span><span class=p>.</span><span class=na>maximumSize</span><span class=p>(</span><span class=n>1000</span><span class=p>)</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>            </span><span class=p>.</span><span class=na>expireAfterWrite</span><span class=p>(</span><span class=n>10</span><span class=p>,</span><span class=w> </span><span class=n>TimeUnit</span><span class=p>.</span><span class=na>MINUTES</span><span class=p>));</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>        </span><span class=k>return</span><span class=w> </span><span class=n>cacheManager</span><span class=p>;</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>    </span><span class=p>}</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w></span><span class=p>}</span><span class=w>
+</span></span></span></code></pre></td></tr></table></div></div><h3 id=3-caching-trong-service>3. Caching trong Service<a hidden class=anchor aria-hidden=true href=#3-caching-trong-service>#</a></h3><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span><span class=lnt>12
+</span><span class=lnt>13
+</span><span class=lnt>14
+</span><span class=lnt>15
+</span><span class=lnt>16
+</span><span class=lnt>17
+</span><span class=lnt>18
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-java data-lang=java><span class=line><span class=cl><span class=nd>@Service</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w></span><span class=kd>public</span><span class=w> </span><span class=kd>class</span> <span class=nc>UserService</span><span class=w> </span><span class=p>{</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>    
+</span></span></span><span class=line><span class=cl><span class=w>    </span><span class=nd>@Cacheable</span><span class=p>(</span><span class=n>value</span><span class=w> </span><span class=o>=</span><span class=w> </span><span class=s>&#34;users&#34;</span><span class=p>,</span><span class=w> </span><span class=n>key</span><span class=w> </span><span class=o>=</span><span class=w> </span><span class=s>&#34;#id&#34;</span><span class=p>)</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>    </span><span class=kd>public</span><span class=w> </span><span class=n>Optional</span><span class=o>&lt;</span><span class=n>User</span><span class=o>&gt;</span><span class=w> </span><span class=nf>getUserById</span><span class=p>(</span><span class=n>Long</span><span class=w> </span><span class=n>id</span><span class=p>)</span><span class=w> </span><span class=p>{</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>        </span><span class=k>return</span><span class=w> </span><span class=n>userRepository</span><span class=p>.</span><span class=na>findById</span><span class=p>(</span><span class=n>id</span><span class=p>);</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>    </span><span class=p>}</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>    
+</span></span></span><span class=line><span class=cl><span class=w>    </span><span class=nd>@CacheEvict</span><span class=p>(</span><span class=n>value</span><span class=w> </span><span class=o>=</span><span class=w> </span><span class=s>&#34;users&#34;</span><span class=p>,</span><span class=w> </span><span class=n>key</span><span class=w> </span><span class=o>=</span><span class=w> </span><span class=s>&#34;#user.id&#34;</span><span class=p>)</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>    </span><span class=kd>public</span><span class=w> </span><span class=n>User</span><span class=w> </span><span class=nf>updateUser</span><span class=p>(</span><span class=n>User</span><span class=w> </span><span class=n>user</span><span class=p>)</span><span class=w> </span><span class=p>{</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>        </span><span class=k>return</span><span class=w> </span><span class=n>userRepository</span><span class=p>.</span><span class=na>save</span><span class=p>(</span><span class=n>user</span><span class=p>);</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>    </span><span class=p>}</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>    
+</span></span></span><span class=line><span class=cl><span class=w>    </span><span class=nd>@CacheEvict</span><span class=p>(</span><span class=n>value</span><span class=w> </span><span class=o>=</span><span class=w> </span><span class=s>&#34;users&#34;</span><span class=p>,</span><span class=w> </span><span class=n>allEntries</span><span class=w> </span><span class=o>=</span><span class=w> </span><span class=kc>true</span><span class=p>)</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>    </span><span class=kd>public</span><span class=w> </span><span class=kt>void</span><span class=w> </span><span class=nf>clearCache</span><span class=p>()</span><span class=w> </span><span class=p>{</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>        </span><span class=c1>// Clear all cache entries</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>    </span><span class=p>}</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w></span><span class=p>}</span><span class=w>
+</span></span></span></code></pre></td></tr></table></div></div><h2 id=auditing>Auditing<a hidden class=anchor aria-hidden=true href=#auditing>#</a></h2><h3 id=1-enable-auditing>1. Enable Auditing<a hidden class=anchor aria-hidden=true href=#1-enable-auditing>#</a></h3><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt>1
+</span><span class=lnt>2
+</span><span class=lnt>3
+</span><span class=lnt>4
+</span><span class=lnt>5
+</span><span class=lnt>6
+</span><span class=lnt>7
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-java data-lang=java><span class=line><span class=cl><span class=nd>@SpringBootApplication</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w></span><span class=nd>@EnableJpaAuditing</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w></span><span class=kd>public</span><span class=w> </span><span class=kd>class</span> <span class=nc>Application</span><span class=w> </span><span class=p>{</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>    </span><span class=kd>public</span><span class=w> </span><span class=kd>static</span><span class=w> </span><span class=kt>void</span><span class=w> </span><span class=nf>main</span><span class=p>(</span><span class=n>String</span><span class=o>[]</span><span class=w> </span><span class=n>args</span><span class=p>)</span><span class=w> </span><span class=p>{</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>        </span><span class=n>SpringApplication</span><span class=p>.</span><span class=na>run</span><span class=p>(</span><span class=n>Application</span><span class=p>.</span><span class=na>class</span><span class=p>,</span><span class=w> </span><span class=n>args</span><span class=p>);</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>    </span><span class=p>}</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w></span><span class=p>}</span><span class=w>
+</span></span></span></code></pre></td></tr></table></div></div><h3 id=2-auditing-entity>2. Auditing Entity<a hidden class=anchor aria-hidden=true href=#2-auditing-entity>#</a></h3><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span><span class=lnt>12
+</span><span class=lnt>13
+</span><span class=lnt>14
+</span><span class=lnt>15
+</span><span class=lnt>16
+</span><span class=lnt>17
+</span><span class=lnt>18
+</span><span class=lnt>19
+</span><span class=lnt>20
+</span><span class=lnt>21
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-java data-lang=java><span class=line><span class=cl><span class=nd>@Entity</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w></span><span class=nd>@EntityListeners</span><span class=p>(</span><span class=n>AuditingEntityListener</span><span class=p>.</span><span class=na>class</span><span class=p>)</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w></span><span class=kd>public</span><span class=w> </span><span class=kd>class</span> <span class=nc>User</span><span class=w> </span><span class=p>{</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>    </span><span class=c1>// ... other fields</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>    
+</span></span></span><span class=line><span class=cl><span class=w>    </span><span class=nd>@CreatedBy</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>    </span><span class=nd>@Column</span><span class=p>(</span><span class=n>name</span><span class=w> </span><span class=o>=</span><span class=w> </span><span class=s>&#34;created_by&#34;</span><span class=p>)</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>    </span><span class=kd>private</span><span class=w> </span><span class=n>String</span><span class=w> </span><span class=n>createdBy</span><span class=p>;</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>    
+</span></span></span><span class=line><span class=cl><span class=w>    </span><span class=nd>@LastModifiedBy</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>    </span><span class=nd>@Column</span><span class=p>(</span><span class=n>name</span><span class=w> </span><span class=o>=</span><span class=w> </span><span class=s>&#34;last_modified_by&#34;</span><span class=p>)</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>    </span><span class=kd>private</span><span class=w> </span><span class=n>String</span><span class=w> </span><span class=n>lastModifiedBy</span><span class=p>;</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>    
+</span></span></span><span class=line><span class=cl><span class=w>    </span><span class=nd>@CreationTimestamp</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>    </span><span class=nd>@Column</span><span class=p>(</span><span class=n>name</span><span class=w> </span><span class=o>=</span><span class=w> </span><span class=s>&#34;created_at&#34;</span><span class=p>,</span><span class=w> </span><span class=n>updatable</span><span class=w> </span><span class=o>=</span><span class=w> </span><span class=kc>false</span><span class=p>)</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>    </span><span class=kd>private</span><span class=w> </span><span class=n>LocalDateTime</span><span class=w> </span><span class=n>createdAt</span><span class=p>;</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>    
+</span></span></span><span class=line><span class=cl><span class=w>    </span><span class=nd>@UpdateTimestamp</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>    </span><span class=nd>@Column</span><span class=p>(</span><span class=n>name</span><span class=w> </span><span class=o>=</span><span class=w> </span><span class=s>&#34;updated_at&#34;</span><span class=p>)</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>    </span><span class=kd>private</span><span class=w> </span><span class=n>LocalDateTime</span><span class=w> </span><span class=n>updatedAt</span><span class=p>;</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w></span><span class=p>}</span><span class=w>
+</span></span></span></code></pre></td></tr></table></div></div><h3 id=3-auditor-provider>3. Auditor Provider<a hidden class=anchor aria-hidden=true href=#3-auditor-provider>#</a></h3><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span><span class=lnt>12
+</span><span class=lnt>13
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-java data-lang=java><span class=line><span class=cl><span class=nd>@Component</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w></span><span class=kd>public</span><span class=w> </span><span class=kd>class</span> <span class=nc>AuditorProvider</span><span class=w> </span><span class=kd>implements</span><span class=w> </span><span class=n>AuditorAware</span><span class=o>&lt;</span><span class=n>String</span><span class=o>&gt;</span><span class=w> </span><span class=p>{</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>    
+</span></span></span><span class=line><span class=cl><span class=w>    </span><span class=nd>@Override</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>    </span><span class=kd>public</span><span class=w> </span><span class=n>Optional</span><span class=o>&lt;</span><span class=n>String</span><span class=o>&gt;</span><span class=w> </span><span class=nf>getCurrentAuditor</span><span class=p>()</span><span class=w> </span><span class=p>{</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>        </span><span class=c1>// Get current user from security context</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>        </span><span class=n>Authentication</span><span class=w> </span><span class=n>authentication</span><span class=w> </span><span class=o>=</span><span class=w> </span><span class=n>SecurityContextHolder</span><span class=p>.</span><span class=na>getContext</span><span class=p>().</span><span class=na>getAuthentication</span><span class=p>();</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>        </span><span class=k>if</span><span class=w> </span><span class=p>(</span><span class=n>authentication</span><span class=w> </span><span class=o>!=</span><span class=w> </span><span class=kc>null</span><span class=w> </span><span class=o>&amp;&amp;</span><span class=w> </span><span class=n>authentication</span><span class=p>.</span><span class=na>isAuthenticated</span><span class=p>())</span><span class=w> </span><span class=p>{</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>            </span><span class=k>return</span><span class=w> </span><span class=n>Optional</span><span class=p>.</span><span class=na>of</span><span class=p>(</span><span class=n>authentication</span><span class=p>.</span><span class=na>getName</span><span class=p>());</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>        </span><span class=p>}</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>        </span><span class=k>return</span><span class=w> </span><span class=n>Optional</span><span class=p>.</span><span class=na>of</span><span class=p>(</span><span class=s>&#34;system&#34;</span><span class=p>);</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>    </span><span class=p>}</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w></span><span class=p>}</span><span class=w>
+</span></span></span></code></pre></td></tr></table></div></div><h2 id=batch-operations>Batch Operations<a hidden class=anchor aria-hidden=true href=#batch-operations>#</a></h2><h3 id=1-batch-insert>1. Batch Insert<a hidden class=anchor aria-hidden=true href=#1-batch-insert>#</a></h3><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span><span class=lnt>12
+</span><span class=lnt>13
+</span><span class=lnt>14
+</span><span class=lnt>15
+</span><span class=lnt>16
+</span><span class=lnt>17
+</span><span class=lnt>18
+</span><span class=lnt>19
+</span><span class=lnt>20
+</span><span class=lnt>21
+</span><span class=lnt>22
+</span><span class=lnt>23
+</span><span class=lnt>24
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-java data-lang=java><span class=line><span class=cl><span class=nd>@Service</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w></span><span class=kd>public</span><span class=w> </span><span class=kd>class</span> <span class=nc>UserService</span><span class=w> </span><span class=p>{</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>    
+</span></span></span><span class=line><span class=cl><span class=w>    </span><span class=nd>@Autowired</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>    </span><span class=kd>private</span><span class=w> </span><span class=n>UserRepository</span><span class=w> </span><span class=n>userRepository</span><span class=p>;</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>    
+</span></span></span><span class=line><span class=cl><span class=w>    </span><span class=nd>@Transactional</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>    </span><span class=kd>public</span><span class=w> </span><span class=kt>void</span><span class=w> </span><span class=nf>batchCreateUsers</span><span class=p>(</span><span class=n>List</span><span class=o>&lt;</span><span class=n>CreateUserRequest</span><span class=o>&gt;</span><span class=w> </span><span class=n>requests</span><span class=p>)</span><span class=w> </span><span class=p>{</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>        </span><span class=n>List</span><span class=o>&lt;</span><span class=n>User</span><span class=o>&gt;</span><span class=w> </span><span class=n>users</span><span class=w> </span><span class=o>=</span><span class=w> </span><span class=n>requests</span><span class=p>.</span><span class=na>stream</span><span class=p>()</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>            </span><span class=p>.</span><span class=na>map</span><span class=p>(</span><span class=k>this</span><span class=p>::</span><span class=n>mapToUser</span><span class=p>)</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>            </span><span class=p>.</span><span class=na>collect</span><span class=p>(</span><span class=n>Collectors</span><span class=p>.</span><span class=na>toList</span><span class=p>());</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>        
+</span></span></span><span class=line><span class=cl><span class=w>        </span><span class=n>userRepository</span><span class=p>.</span><span class=na>saveAll</span><span class=p>(</span><span class=n>users</span><span class=p>);</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>    </span><span class=p>}</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>    
+</span></span></span><span class=line><span class=cl><span class=w>    </span><span class=nd>@Transactional</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>    </span><span class=kd>public</span><span class=w> </span><span class=kt>void</span><span class=w> </span><span class=nf>batchUpdateUsers</span><span class=p>(</span><span class=n>List</span><span class=o>&lt;</span><span class=n>UpdateUserRequest</span><span class=o>&gt;</span><span class=w> </span><span class=n>requests</span><span class=p>)</span><span class=w> </span><span class=p>{</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>        </span><span class=n>List</span><span class=o>&lt;</span><span class=n>User</span><span class=o>&gt;</span><span class=w> </span><span class=n>users</span><span class=w> </span><span class=o>=</span><span class=w> </span><span class=n>requests</span><span class=p>.</span><span class=na>stream</span><span class=p>()</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>            </span><span class=p>.</span><span class=na>map</span><span class=p>(</span><span class=k>this</span><span class=p>::</span><span class=n>mapToUser</span><span class=p>)</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>            </span><span class=p>.</span><span class=na>collect</span><span class=p>(</span><span class=n>Collectors</span><span class=p>.</span><span class=na>toList</span><span class=p>());</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>        
+</span></span></span><span class=line><span class=cl><span class=w>        </span><span class=n>userRepository</span><span class=p>.</span><span class=na>saveAll</span><span class=p>(</span><span class=n>users</span><span class=p>);</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>    </span><span class=p>}</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w></span><span class=p>}</span><span class=w>
+</span></span></span></code></pre></td></tr></table></div></div><h3 id=2-batch-delete>2. Batch Delete<a hidden class=anchor aria-hidden=true href=#2-batch-delete>#</a></h3><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-java data-lang=java><span class=line><span class=cl><span class=nd>@Repository</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w></span><span class=kd>public</span><span class=w> </span><span class=kd>interface</span> <span class=nc>UserRepository</span><span class=w> </span><span class=kd>extends</span><span class=w> </span><span class=n>JpaRepository</span><span class=o>&lt;</span><span class=n>User</span><span class=p>,</span><span class=w> </span><span class=n>Long</span><span class=o>&gt;</span><span class=w> </span><span class=p>{</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>    
+</span></span></span><span class=line><span class=cl><span class=w>    </span><span class=nd>@Modifying</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>    </span><span class=nd>@Query</span><span class=p>(</span><span class=s>&#34;DELETE FROM User u WHERE u.status = :status&#34;</span><span class=p>)</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>    </span><span class=kt>void</span><span class=w> </span><span class=nf>deleteByStatus</span><span class=p>(</span><span class=nd>@Param</span><span class=p>(</span><span class=s>&#34;status&#34;</span><span class=p>)</span><span class=w> </span><span class=n>UserStatus</span><span class=w> </span><span class=n>status</span><span class=p>);</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>    
+</span></span></span><span class=line><span class=cl><span class=w>    </span><span class=nd>@Modifying</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>    </span><span class=nd>@Query</span><span class=p>(</span><span class=s>&#34;DELETE FROM User u WHERE u.createdAt &lt; :date&#34;</span><span class=p>)</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>    </span><span class=kt>void</span><span class=w> </span><span class=nf>deleteUsersOlderThan</span><span class=p>(</span><span class=nd>@Param</span><span class=p>(</span><span class=s>&#34;date&#34;</span><span class=p>)</span><span class=w> </span><span class=n>LocalDateTime</span><span class=w> </span><span class=n>date</span><span class=p>);</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w></span><span class=p>}</span><span class=w>
+</span></span></span></code></pre></td></tr></table></div></div><h2 id=performance-optimization>Performance Optimization<a hidden class=anchor aria-hidden=true href=#performance-optimization>#</a></h2><h3 id=1-lazy-loading>1. Lazy Loading<a hidden class=anchor aria-hidden=true href=#1-lazy-loading>#</a></h3><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt>1
+</span><span class=lnt>2
+</span><span class=lnt>3
+</span><span class=lnt>4
+</span><span class=lnt>5
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-java data-lang=java><span class=line><span class=cl><span class=nd>@Entity</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w></span><span class=kd>public</span><span class=w> </span><span class=kd>class</span> <span class=nc>User</span><span class=w> </span><span class=p>{</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>    </span><span class=nd>@OneToMany</span><span class=p>(</span><span class=n>mappedBy</span><span class=w> </span><span class=o>=</span><span class=w> </span><span class=s>&#34;user&#34;</span><span class=p>,</span><span class=w> </span><span class=n>fetch</span><span class=w> </span><span class=o>=</span><span class=w> </span><span class=n>FetchType</span><span class=p>.</span><span class=na>LAZY</span><span class=p>)</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>    </span><span class=kd>private</span><span class=w> </span><span class=n>List</span><span class=o>&lt;</span><span class=n>Order</span><span class=o>&gt;</span><span class=w> </span><span class=n>orders</span><span class=w> </span><span class=o>=</span><span class=w> </span><span class=k>new</span><span class=w> </span><span class=n>ArrayList</span><span class=o>&lt;&gt;</span><span class=p>();</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w></span><span class=p>}</span><span class=w>
+</span></span></span></code></pre></td></tr></table></div></div><h3 id=2-eager-loading-với-entitygraph>2. Eager Loading với @EntityGraph<a hidden class=anchor aria-hidden=true href=#2-eager-loading-với-entitygraph>#</a></h3><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt>1
+</span><span class=lnt>2
+</span><span class=lnt>3
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-java data-lang=java><span class=line><span class=cl><span class=nd>@EntityGraph</span><span class=p>(</span><span class=n>attributePaths</span><span class=w> </span><span class=o>=</span><span class=w> </span><span class=p>{</span><span class=s>&#34;orders&#34;</span><span class=p>,</span><span class=w> </span><span class=s>&#34;orders.items&#34;</span><span class=p>})</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w></span><span class=nd>@Query</span><span class=p>(</span><span class=s>&#34;SELECT u FROM User u WHERE u.id = :id&#34;</span><span class=p>)</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w></span><span class=n>Optional</span><span class=o>&lt;</span><span class=n>User</span><span class=o>&gt;</span><span class=w> </span><span class=nf>findByIdWithOrders</span><span class=p>(</span><span class=nd>@Param</span><span class=p>(</span><span class=s>&#34;id&#34;</span><span class=p>)</span><span class=w> </span><span class=n>Long</span><span class=w> </span><span class=n>id</span><span class=p>);</span><span class=w>
+</span></span></span></code></pre></td></tr></table></div></div><h3 id=3-projection>3. Projection<a hidden class=anchor aria-hidden=true href=#3-projection>#</a></h3><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-java data-lang=java><span class=line><span class=cl><span class=kd>public</span><span class=w> </span><span class=kd>interface</span> <span class=nc>UserProjection</span><span class=w> </span><span class=p>{</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>    </span><span class=n>String</span><span class=w> </span><span class=nf>getUsername</span><span class=p>();</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>    </span><span class=n>String</span><span class=w> </span><span class=nf>getEmail</span><span class=p>();</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>    </span><span class=n>String</span><span class=w> </span><span class=nf>getFirstName</span><span class=p>();</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>    </span><span class=n>String</span><span class=w> </span><span class=nf>getLastName</span><span class=p>();</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w></span><span class=p>}</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w></span><span class=nd>@Repository</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w></span><span class=kd>public</span><span class=w> </span><span class=kd>interface</span> <span class=nc>UserRepository</span><span class=w> </span><span class=kd>extends</span><span class=w> </span><span class=n>JpaRepository</span><span class=o>&lt;</span><span class=n>User</span><span class=p>,</span><span class=w> </span><span class=n>Long</span><span class=o>&gt;</span><span class=w> </span><span class=p>{</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>    </span><span class=n>List</span><span class=o>&lt;</span><span class=n>UserProjection</span><span class=o>&gt;</span><span class=w> </span><span class=nf>findByStatus</span><span class=p>(</span><span class=n>UserStatus</span><span class=w> </span><span class=n>status</span><span class=p>);</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w></span><span class=p>}</span><span class=w>
+</span></span></span></code></pre></td></tr></table></div></div><h2 id=kết-luận>Kết Luận<a hidden class=anchor aria-hidden=true href=#kết-luận>#</a></h2><p>Spring Data JPA cung cấp một cách mạnh mẽ và hiệu quả để làm việc với database. Với những kiến thức này, bạn có thể:</p><ul><li>Tạo entities và relationships</li><li>Sử dụng query methods và custom queries</li><li>Implement pagination và sorting</li><li>Sử dụng caching để tối ưu performance</li><li>Thực hiện batch operations</li><li>Tối ưu hóa queries</li></ul><p>Trong bài viết tiếp theo, tôi sẽ hướng dẫn về testing với Spring Boot! 🚀</p></div><footer class=post-footer><ul class=post-tags><li><a href=https://nguyenthanhluan09060024.github.io/my-programming-blog/tags/java/>Java</a></li><li><a href=https://nguyenthanhluan09060024.github.io/my-programming-blog/tags/spring-data-jpa/>Spring-Data-Jpa</a></li><li><a href=https://nguyenthanhluan09060024.github.io/my-programming-blog/tags/database/>Database</a></li><li><a href=https://nguyenthanhluan09060024.github.io/my-programming-blog/tags/orm/>Orm</a></li></ul><nav class=paginav><a class=prev href=https://nguyenthanhluan09060024.github.io/my-programming-blog/posts/javascript-nodejs-express/><span class=title>« Prev</span><br><span>Xây Dựng REST API Với Node.js và Express</span>
+</a><a class=next href=https://nguyenthanhluan09060024.github.io/my-programming-blog/posts/javascript-async-programming/><span class=title>Next »</span><br><span>JavaScript Async Programming - Callbacks, Promises và Async/Await</span></a></nav></footer></article></main><footer class=footer><span>&copy; 2025 <a href=https://nguyenthanhluan09060024.github.io/my-programming-blog/>My Programming Blog</a></span> ·
+<span>Powered by
+<a href=https://gohugo.io/ rel="noopener noreferrer" target=_blank>Hugo</a> &
+<a href=https://github.com/adityatelange/hugo-PaperMod/ rel=noopener target=_blank>PaperMod</a></span></footer><a href=#top aria-label="go to top" title="Go to Top (Alt + G)" class=top-link id=top-link accesskey=g><svg viewBox="0 0 12 6" fill="currentColor"><path d="M12 6H0l6-6z"/></svg>
+</a><script>let menu=document.getElementById("menu");menu&&(menu.scrollLeft=localStorage.getItem("menu-scroll-position"),menu.onscroll=function(){localStorage.setItem("menu-scroll-position",menu.scrollLeft)}),document.querySelectorAll('a[href^="#"]').forEach(e=>{e.addEventListener("click",function(e){e.preventDefault();var t=this.getAttribute("href").substr(1);window.matchMedia("(prefers-reduced-motion: reduce)").matches?document.querySelector(`[id='${decodeURIComponent(t)}']`).scrollIntoView():document.querySelector(`[id='${decodeURIComponent(t)}']`).scrollIntoView({behavior:"smooth"}),t==="top"?history.replaceState(null,null," "):history.pushState(null,null,`#${t}`)})})</script><script>var mybutton=document.getElementById("top-link");window.onscroll=function(){document.body.scrollTop>800||document.documentElement.scrollTop>800?(mybutton.style.visibility="visible",mybutton.style.opacity="1"):(mybutton.style.visibility="hidden",mybutton.style.opacity="0")}</script><script>document.getElementById("theme-toggle").addEventListener("click",()=>{document.body.className.includes("dark")?(document.body.classList.remove("dark"),localStorage.setItem("pref-theme","light")):(document.body.classList.add("dark"),localStorage.setItem("pref-theme","dark"))})</script><script>document.querySelectorAll("pre > code").forEach(e=>{const n=e.parentNode.parentNode,t=document.createElement("button");t.classList.add("copy-code"),t.innerHTML="copy";function s(){t.innerHTML="copied!",setTimeout(()=>{t.innerHTML="copy"},2e3)}t.addEventListener("click",t=>{if("clipboard"in navigator){navigator.clipboard.writeText(e.textContent),s();return}const n=document.createRange();n.selectNodeContents(e);const o=window.getSelection();o.removeAllRanges(),o.addRange(n);try{document.execCommand("copy"),s()}catch{}o.removeRange(n)}),n.classList.contains("highlight")?n.appendChild(t):n.parentNode.firstChild==n||(e.parentNode.parentNode.parentNode.parentNode.parentNode.nodeName=="TABLE"?e.parentNode.parentNode.parentNode.parentNode.parentNode.appendChild(t):e.parentNode.appendChild(t))})</script></body></html>

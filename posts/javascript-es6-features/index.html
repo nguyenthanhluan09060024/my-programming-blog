@@ -1,0 +1,642 @@
+<!doctype html><html lang=en dir=auto><head><meta charset=utf-8><meta http-equiv=X-UA-Compatible content="IE=edge"><meta name=viewport content="width=device-width,initial-scale=1,shrink-to-fit=no"><meta name=robots content="index, follow"><title>JavaScript ES6+ - Những Tính Năng Quan Trọng Nhất | My Programming Blog</title><meta name=keywords content="javascript,es6,modern-js,programming"><meta name=description content="Tổng hợp các tính năng quan trọng nhất của JavaScript ES6+ mà mọi developer nên biết"><meta name=author content="Thanh Tai"><link rel=canonical href=https://nguyenthanhluan09060024.github.io/my-programming-blog/posts/javascript-es6-features/><link crossorigin=anonymous href=/my-programming-blog/assets/css/stylesheet.a482bf00fa5c046040ef7973ad5fdf5657890cacb596c93f1382f664ca542074.css integrity="sha256-pIK/APpcBGBA73lzrV/fVleJDKy1lsk/E4L2ZMpUIHQ=" rel="preload stylesheet" as=style><link rel=icon href=https://nguyenthanhluan09060024.github.io/my-programming-blog/favicon.ico><link rel=icon type=image/png sizes=16x16 href=https://nguyenthanhluan09060024.github.io/my-programming-blog/favicon-16x16.png><link rel=icon type=image/png sizes=32x32 href=https://nguyenthanhluan09060024.github.io/my-programming-blog/favicon-32x32.png><link rel=apple-touch-icon href=https://nguyenthanhluan09060024.github.io/my-programming-blog/apple-touch-icon.png><link rel=mask-icon href=https://nguyenthanhluan09060024.github.io/my-programming-blog/safari-pinned-tab.svg><meta name=theme-color content="#2e2e33"><meta name=msapplication-TileColor content="#2e2e33"><link rel=alternate hreflang=en href=https://nguyenthanhluan09060024.github.io/my-programming-blog/posts/javascript-es6-features/><noscript><style>#theme-toggle,.top-link{display:none}</style><style>@media(prefers-color-scheme:dark){:root{--theme:rgb(29, 30, 32);--entry:rgb(46, 46, 51);--primary:rgb(218, 218, 219);--secondary:rgb(155, 156, 157);--tertiary:rgb(65, 66, 68);--content:rgb(196, 196, 197);--code-block-bg:rgb(46, 46, 51);--code-bg:rgb(55, 56, 62);--border:rgb(51, 51, 51)}.list{background:var(--theme)}.list:not(.dark)::-webkit-scrollbar-track{background:0 0}.list:not(.dark)::-webkit-scrollbar-thumb{border-color:var(--theme)}}</style></noscript><meta property="og:url" content="https://nguyenthanhluan09060024.github.io/my-programming-blog/posts/javascript-es6-features/"><meta property="og:site_name" content="My Programming Blog"><meta property="og:title" content="JavaScript ES6+ - Những Tính Năng Quan Trọng Nhất"><meta property="og:description" content="Tổng hợp các tính năng quan trọng nhất của JavaScript ES6+ mà mọi developer nên biết"><meta property="og:locale" content="vi"><meta property="og:type" content="article"><meta property="article:section" content="posts"><meta property="article:published_time" content="2024-01-18T14:30:00+07:00"><meta property="article:modified_time" content="2024-01-18T14:30:00+07:00"><meta property="article:tag" content="Javascript"><meta property="article:tag" content="Es6"><meta property="article:tag" content="Modern-Js"><meta property="article:tag" content="Programming"><meta name=twitter:card content="summary"><meta name=twitter:title content="JavaScript ES6+ - Những Tính Năng Quan Trọng Nhất"><meta name=twitter:description content="Tổng hợp các tính năng quan trọng nhất của JavaScript ES6+ mà mọi developer nên biết"><script type=application/ld+json>{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Posts","item":"https://nguyenthanhluan09060024.github.io/my-programming-blog/posts/"},{"@type":"ListItem","position":2,"name":"JavaScript ES6+ - Những Tính Năng Quan Trọng Nhất","item":"https://nguyenthanhluan09060024.github.io/my-programming-blog/posts/javascript-es6-features/"}]}</script><script type=application/ld+json>{"@context":"https://schema.org","@type":"BlogPosting","headline":"JavaScript ES6+ - Những Tính Năng Quan Trọng Nhất","name":"JavaScript ES6\u002b - Những Tính Năng Quan Trọng Nhất","description":"Tổng hợp các tính năng quan trọng nhất của JavaScript ES6+ mà mọi developer nên biết","keywords":["javascript","es6","modern-js","programming"],"articleBody":"JavaScript ES6+ - Những Tính Năng Quan Trọng Nhất ES6 (ECMAScript 2015) đã mang đến một cuộc cách mạng cho JavaScript với nhiều tính năng mới mạnh mẽ. Trong bài viết này, tôi sẽ giới thiệu những tính năng quan trọng nhất mà mọi developer JavaScript nên nắm vững.\n1. Arrow Functions Arrow functions cung cấp cú pháp ngắn gọn hơn cho việc viết functions.\nCú pháp cũ: 1 2 3 4 5 6 7 function add(a, b) { return a + b; } const multiply = function(a, b) { return a * b; }; Cú pháp mới: 1 2 3 4 5 6 7 8 9 10 const add = (a, b) =\u003e a + b; const multiply = (a, b) =\u003e { return a * b; }; // Với một tham số const square = x =\u003e x * x; // Không có tham số const greet = () =\u003e console.log('Hello!'); Lưu ý về this: 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 class Person { constructor(name) { this.name = name; } // Arrow function giữ nguyên context của this greetArrow = () =\u003e { console.log(`Hello, I'm ${this.name}`); } // Regular function có this riêng greetRegular() { console.log(`Hello, I'm ${this.name}`); } } 2. Destructuring Assignment Destructuring cho phép giải nén các giá trị từ arrays hoặc objects.\nArray Destructuring: 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 const numbers = [1, 2, 3, 4, 5]; // Cú pháp cũ const first = numbers[0]; const second = numbers[1]; // Cú pháp mới const [first, second, ...rest] = numbers; console.log(first); // 1 console.log(second); // 2 console.log(rest); // [3, 4, 5] // Với default values const [a, b, c = 10] = [1, 2]; console.log(c); // 10 // Hoán đổi giá trị let x = 1, y = 2; [x, y] = [y, x]; console.log(x, y); // 2, 1 Object Destructuring: 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26 27 28 29 30 31 32 33 const person = { name: 'Nguyễn Văn A', age: 25, city: 'Hà Nội', country: 'Việt Nam' }; // Cú pháp cũ const name = person.name; const age = person.age; // Cú pháp mới const { name, age, city } = person; console.log(name, age, city); // Nguyễn Văn A, 25, Hà Nội // Với default values const { name, age, salary = 0 } = person; // Rename variables const { name: fullName, age: years } = person; // Nested destructuring const user = { profile: { name: 'John', address: { city: 'Hanoi', country: 'Vietnam' } } }; const { profile: { name, address: { city } } } = user; 3. Template Literals Template literals cung cấp cú pháp mới để tạo strings với khả năng nhúng biểu thức.\n1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26 27 28 29 30 const name = 'Nguyễn Văn A'; const age = 25; // Cú pháp cũ const message = 'Xin chào, tôi là ' + name + ', năm nay ' + age + ' tuổi.'; // Cú pháp mới const message = `Xin chào, tôi là ${name}, năm nay ${age} tuổi.`; // Multi-line strings const html = ` ${name} Tuổi: ${age}\nThời gian: ${new Date().toLocaleString()}\n`; // Tagged templates function highlight(strings, ...values) { return strings.reduce((result, string, i) =\u003e { const value = values[i] ? `${values[i]}` : ''; return result + string + value; }, ''); } const name = 'JavaScript'; const version = 'ES6'; const highlighted = highlight`Tôi đang học ${name} ${version}`; // Kết quả: \"Tôi đang học JavaScript ES6\" 4. Spread Operator và Rest Parameters Spread Operator: 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 // Arrays const arr1 = [1, 2, 3]; const arr2 = [4, 5, 6]; const combined = [...arr1, ...arr2]; // [1, 2, 3, 4, 5, 6] // Objects const obj1 = { a: 1, b: 2 }; const obj2 = { c: 3, d: 4 }; const merged = { ...obj1, ...obj2 }; // { a: 1, b: 2, c: 3, d: 4 } // Function calls const numbers = [1, 2, 3, 4, 5]; const max = Math.max(...numbers); // 5 // Copy arrays/objects const originalArray = [1, 2, 3]; const copiedArray = [...originalArray]; const originalObject = { x: 1, y: 2 }; const copiedObject = { ...originalObject }; Rest Parameters: 1 2 3 4 5 6 7 8 9 10 11 12 13 14 // Thu thập tất cả arguments thành một array function sum(...numbers) { return numbers.reduce((total, num) =\u003e total + num, 0); } console.log(sum(1, 2, 3, 4, 5)); // 15 // Kết hợp với destructuring function greet(firstName, lastName, ...titles) { console.log(`Xin chào ${firstName} ${lastName}`); console.log('Danh hiệu:', titles); } greet('Nguyễn', 'Văn A', 'Tiến sĩ', 'Giáo sư'); 5. Classes ES6 giới thiệu cú pháp class cho JavaScript.\n1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26 27 28 29 30 31 32 33 34 35 36 37 38 39 40 41 42 43 44 45 46 47 48 class Person { constructor(name, age) { this.name = name; this.age = age; } // Method greet() { return `Xin chào, tôi là ${this.name}`; } // Getter get info() { return `${this.name} (${this.age} tuổi)`; } // Setter set info(value) { [this.name, this.age] = value.split(' '); } // Static method static createAdult(name) { return new Person(name, 18); } } // Inheritance class Student extends Person { constructor(name, age, school) { super(name, age); this.school = school; } study() { return `${this.name} đang học tại ${this.school}`; } // Override method greet() { return `${super.greet()}, tôi là sinh viên`; } } // Sử dụng const student = new Student('Nguyễn Văn B', 20, 'Đại học Bách Khoa'); console.log(student.greet()); // Xin chào, tôi là Nguyễn Văn B, tôi là sinh viên console.log(student.study()); // Nguyễn Văn B đang học tại Đại học Bách Khoa 6. Modules (Import/Export) Export: 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 // math.js export const PI = 3.14159; export function add(a, b) { return a + b; } export function multiply(a, b) { return a * b; } // Default export export default class Calculator { constructor() { this.result = 0; } calculate(operation, a, b) { switch(operation) { case 'add': return a + b; case 'multiply': return a * b; default: return 0; } } } Import: 1 2 3 4 5 6 7 8 9 10 11 12 13 // main.js import Calculator, { PI, add, multiply } from './math.js'; // Sử dụng console.log(PI); // 3.14159 console.log(add(2, 3)); // 5 const calc = new Calculator(); console.log(calc.calculate('add', 5, 3)); // 8 // Import tất cả import * as MathUtils from './math.js'; console.log(MathUtils.PI); 7. Promises và Async/Await Promises: 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 function fetchData(url) { return new Promise((resolve, reject) =\u003e { setTimeout(() =\u003e { if (url) { resolve({ data: 'Dữ liệu từ server', url }); } else { reject(new Error('URL không hợp lệ')); } }, 1000); }); } // Sử dụng Promise fetchData('https://api.example.com') .then(response =\u003e { console.log('Thành công:', response); return fetchData('https://api.example.com/users'); }) .then(userData =\u003e { console.log('Dữ liệu user:', userData); }) .catch(error =\u003e { console.error('Lỗi:', error.message); }); Async/Await: 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 async function loadData() { try { const response = await fetchData('https://api.example.com'); console.log('Thành công:', response); const userData = await fetchData('https://api.example.com/users'); console.log('Dữ liệu user:', userData); return { response, userData }; } catch (error) { console.error('Lỗi:', error.message); throw error; } } // Sử dụng loadData() .then(result =\u003e console.log('Hoàn thành:', result)) .catch(error =\u003e console.error('Lỗi cuối:', error)); 8. Map và Set Map: 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22 const userMap = new Map(); // Thêm dữ liệu userMap.set('user1', { name: 'Nguyễn Văn A', age: 25 }); userMap.set('user2', { name: 'Trần Thị B', age: 30 }); // Lấy dữ liệu console.log(userMap.get('user1')); // { name: 'Nguyễn Văn A', age: 25 } // Kiểm tra tồn tại console.log(userMap.has('user1')); // true // Xóa userMap.delete('user1'); // Kích thước console.log(userMap.size); // 1 // Iterate for (const [key, value] of userMap) { console.log(key, value); } Set: 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 const uniqueNumbers = new Set([1, 2, 3, 3, 4, 4, 5]); console.log(uniqueNumbers); // Set { 1, 2, 3, 4, 5 } // Thêm phần tử uniqueNumbers.add(6); // Kiểm tra tồn tại console.log(uniqueNumbers.has(3)); // true // Xóa uniqueNumbers.delete(3); // Kích thước console.log(uniqueNumbers.size); // 5 // Convert to Array const array = [...uniqueNumbers]; Kết Luận ES6+ đã làm cho JavaScript trở nên mạnh mẽ và dễ sử dụng hơn rất nhiều. Những tính năng này giúp code trở nên:\nNgắn gọn hơn: Arrow functions, destructuring Dễ đọc hơn: Template literals, classes Mạnh mẽ hơn: Promises, async/await Linh hoạt hơn: Modules, spread operator Hãy thực hành những tính năng này trong các dự án của bạn để nắm vững chúng. Trong bài viết tiếp theo, tôi sẽ hướng dẫn về React và cách sử dụng những tính năng ES6+ này trong thực tế! 🚀\n","wordCount":"1614","inLanguage":"en","datePublished":"2024-01-18T14:30:00+07:00","dateModified":"2024-01-18T14:30:00+07:00","author":{"@type":"Person","name":"Thanh Tai"},"mainEntityOfPage":{"@type":"WebPage","@id":"https://nguyenthanhluan09060024.github.io/my-programming-blog/posts/javascript-es6-features/"},"publisher":{"@type":"Organization","name":"My Programming Blog","logo":{"@type":"ImageObject","url":"https://nguyenthanhluan09060024.github.io/my-programming-blog/favicon.ico"}}}</script></head><body id=top><script>localStorage.getItem("pref-theme")==="dark"?document.body.classList.add("dark"):localStorage.getItem("pref-theme")==="light"?document.body.classList.remove("dark"):window.matchMedia("(prefers-color-scheme: dark)").matches&&document.body.classList.add("dark")</script><header class=header><nav class=nav><div class=logo><a href=https://nguyenthanhluan09060024.github.io/my-programming-blog/ accesskey=h title="My Programming Blog (Alt + H)">My Programming Blog</a><div class=logo-switches><button id=theme-toggle accesskey=t title="(Alt + T)" aria-label="Toggle theme">
+<svg id="moon" width="24" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"/></svg>
+<svg id="sun" width="24" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg></button></div></div><ul id=menu><li><a href=https://nguyenthanhluan09060024.github.io/my-programming-blog/ title="🏠 Trang chủ"><span>🏠 Trang chủ</span></a></li><li><a href=https://nguyenthanhluan09060024.github.io/my-programming-blog/posts/ title="📝 Bài viết"><span>📝 Bài viết</span></a></li><li><a href=https://nguyenthanhluan09060024.github.io/my-programming-blog/about/ title="👋 Giới thiệu"><span>👋 Giới thiệu</span></a></li></ul></nav></header><main class=main><article class=post-single><header class=post-header><div class=breadcrumbs><a href=https://nguyenthanhluan09060024.github.io/my-programming-blog/>Home</a>&nbsp;»&nbsp;<a href=https://nguyenthanhluan09060024.github.io/my-programming-blog/posts/>Posts</a></div><h1 class="post-title entry-hint-parent">JavaScript ES6+ - Những Tính Năng Quan Trọng Nhất</h1><div class=post-description>Tổng hợp các tính năng quan trọng nhất của JavaScript ES6+ mà mọi developer nên biết</div><div class=post-meta></div></header><div class=toc><details><summary accesskey=c title="(Alt + C)"><span class=details>Table of Contents</span></summary><div class=inner><nav id=TableOfContents><ul><li><a href=#1-arrow-functions>1. Arrow Functions</a><ul><li><a href=#cú-pháp-cũ>Cú pháp cũ:</a></li><li><a href=#cú-pháp-mới>Cú pháp mới:</a></li><li><a href=#lưu-ý-về-this>Lưu ý về <code>this</code>:</a></li></ul></li><li><a href=#2-destructuring-assignment>2. Destructuring Assignment</a><ul><li><a href=#array-destructuring>Array Destructuring:</a></li><li><a href=#object-destructuring>Object Destructuring:</a></li></ul></li><li><a href=#3-template-literals>3. Template Literals</a></li><li><a href=#4-spread-operator-và-rest-parameters>4. Spread Operator và Rest Parameters</a><ul><li><a href=#spread-operator>Spread Operator:</a></li><li><a href=#rest-parameters>Rest Parameters:</a></li></ul></li><li><a href=#5-classes>5. Classes</a></li><li><a href=#6-modules-importexport>6. Modules (Import/Export)</a><ul><li><a href=#export>Export:</a></li><li><a href=#import>Import:</a></li></ul></li><li><a href=#7-promises-và-asyncawait>7. Promises và Async/Await</a><ul><li><a href=#promises>Promises:</a></li><li><a href=#asyncawait>Async/Await:</a></li></ul></li><li><a href=#8-map-và-set>8. Map và Set</a><ul><li><a href=#map>Map:</a></li><li><a href=#set>Set:</a></li></ul></li><li><a href=#kết-luận>Kết Luận</a></li></ul></nav></div></details></div><div class=post-content><h1 id=javascript-es6---những-tính-năng-quan-trọng-nhất>JavaScript ES6+ - Những Tính Năng Quan Trọng Nhất<a hidden class=anchor aria-hidden=true href=#javascript-es6---những-tính-năng-quan-trọng-nhất>#</a></h1><p>ES6 (ECMAScript 2015) đã mang đến một cuộc cách mạng cho JavaScript với nhiều tính năng mới mạnh mẽ. Trong bài viết này, tôi sẽ giới thiệu những tính năng quan trọng nhất mà mọi developer JavaScript nên nắm vững.</p><h2 id=1-arrow-functions>1. Arrow Functions<a hidden class=anchor aria-hidden=true href=#1-arrow-functions>#</a></h2><p>Arrow functions cung cấp cú pháp ngắn gọn hơn cho việc viết functions.</p><h3 id=cú-pháp-cũ>Cú pháp cũ:<a hidden class=anchor aria-hidden=true href=#cú-pháp-cũ>#</a></h3><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt>1
+</span><span class=lnt>2
+</span><span class=lnt>3
+</span><span class=lnt>4
+</span><span class=lnt>5
+</span><span class=lnt>6
+</span><span class=lnt>7
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-javascript data-lang=javascript><span class=line><span class=cl><span class=kd>function</span> <span class=nx>add</span><span class=p>(</span><span class=nx>a</span><span class=p>,</span> <span class=nx>b</span><span class=p>)</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>    <span class=k>return</span> <span class=nx>a</span> <span class=o>+</span> <span class=nx>b</span><span class=p>;</span>
+</span></span><span class=line><span class=cl><span class=p>}</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=kr>const</span> <span class=nx>multiply</span> <span class=o>=</span> <span class=kd>function</span><span class=p>(</span><span class=nx>a</span><span class=p>,</span> <span class=nx>b</span><span class=p>)</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>    <span class=k>return</span> <span class=nx>a</span> <span class=o>*</span> <span class=nx>b</span><span class=p>;</span>
+</span></span><span class=line><span class=cl><span class=p>};</span>
+</span></span></code></pre></td></tr></table></div></div><h3 id=cú-pháp-mới>Cú pháp mới:<a hidden class=anchor aria-hidden=true href=#cú-pháp-mới>#</a></h3><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-javascript data-lang=javascript><span class=line><span class=cl><span class=kr>const</span> <span class=nx>add</span> <span class=o>=</span> <span class=p>(</span><span class=nx>a</span><span class=p>,</span> <span class=nx>b</span><span class=p>)</span> <span class=p>=&gt;</span> <span class=nx>a</span> <span class=o>+</span> <span class=nx>b</span><span class=p>;</span>
+</span></span><span class=line><span class=cl><span class=kr>const</span> <span class=nx>multiply</span> <span class=o>=</span> <span class=p>(</span><span class=nx>a</span><span class=p>,</span> <span class=nx>b</span><span class=p>)</span> <span class=p>=&gt;</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>    <span class=k>return</span> <span class=nx>a</span> <span class=o>*</span> <span class=nx>b</span><span class=p>;</span>
+</span></span><span class=line><span class=cl><span class=p>};</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=c1>// Với một tham số
+</span></span></span><span class=line><span class=cl><span class=c1></span><span class=kr>const</span> <span class=nx>square</span> <span class=o>=</span> <span class=nx>x</span> <span class=p>=&gt;</span> <span class=nx>x</span> <span class=o>*</span> <span class=nx>x</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=c1>// Không có tham số
+</span></span></span><span class=line><span class=cl><span class=c1></span><span class=kr>const</span> <span class=nx>greet</span> <span class=o>=</span> <span class=p>()</span> <span class=p>=&gt;</span> <span class=nx>console</span><span class=p>.</span><span class=nx>log</span><span class=p>(</span><span class=s1>&#39;Hello!&#39;</span><span class=p>);</span>
+</span></span></code></pre></td></tr></table></div></div><h3 id=lưu-ý-về-this>Lưu ý về <code>this</code>:<a hidden class=anchor aria-hidden=true href=#lưu-ý-về-this>#</a></h3><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span><span class=lnt>12
+</span><span class=lnt>13
+</span><span class=lnt>14
+</span><span class=lnt>15
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-javascript data-lang=javascript><span class=line><span class=cl><span class=kr>class</span> <span class=nx>Person</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>    <span class=nx>constructor</span><span class=p>(</span><span class=nx>name</span><span class=p>)</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>        <span class=k>this</span><span class=p>.</span><span class=nx>name</span> <span class=o>=</span> <span class=nx>name</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>    <span class=p>}</span>
+</span></span><span class=line><span class=cl>    
+</span></span><span class=line><span class=cl>    <span class=c1>// Arrow function giữ nguyên context của this
+</span></span></span><span class=line><span class=cl><span class=c1></span>    <span class=nx>greetArrow</span> <span class=o>=</span> <span class=p>()</span> <span class=p>=&gt;</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>        <span class=nx>console</span><span class=p>.</span><span class=nx>log</span><span class=p>(</span><span class=sb>`Hello, I&#39;m </span><span class=si>${</span><span class=k>this</span><span class=p>.</span><span class=nx>name</span><span class=si>}</span><span class=sb>`</span><span class=p>);</span>
+</span></span><span class=line><span class=cl>    <span class=p>}</span>
+</span></span><span class=line><span class=cl>    
+</span></span><span class=line><span class=cl>    <span class=c1>// Regular function có this riêng
+</span></span></span><span class=line><span class=cl><span class=c1></span>    <span class=nx>greetRegular</span><span class=p>()</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>        <span class=nx>console</span><span class=p>.</span><span class=nx>log</span><span class=p>(</span><span class=sb>`Hello, I&#39;m </span><span class=si>${</span><span class=k>this</span><span class=p>.</span><span class=nx>name</span><span class=si>}</span><span class=sb>`</span><span class=p>);</span>
+</span></span><span class=line><span class=cl>    <span class=p>}</span>
+</span></span><span class=line><span class=cl><span class=p>}</span>
+</span></span></code></pre></td></tr></table></div></div><h2 id=2-destructuring-assignment>2. Destructuring Assignment<a hidden class=anchor aria-hidden=true href=#2-destructuring-assignment>#</a></h2><p>Destructuring cho phép giải nén các giá trị từ arrays hoặc objects.</p><h3 id=array-destructuring>Array Destructuring:<a hidden class=anchor aria-hidden=true href=#array-destructuring>#</a></h3><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span><span class=lnt>12
+</span><span class=lnt>13
+</span><span class=lnt>14
+</span><span class=lnt>15
+</span><span class=lnt>16
+</span><span class=lnt>17
+</span><span class=lnt>18
+</span><span class=lnt>19
+</span><span class=lnt>20
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-javascript data-lang=javascript><span class=line><span class=cl><span class=kr>const</span> <span class=nx>numbers</span> <span class=o>=</span> <span class=p>[</span><span class=mi>1</span><span class=p>,</span> <span class=mi>2</span><span class=p>,</span> <span class=mi>3</span><span class=p>,</span> <span class=mi>4</span><span class=p>,</span> <span class=mi>5</span><span class=p>];</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=c1>// Cú pháp cũ
+</span></span></span><span class=line><span class=cl><span class=c1></span><span class=kr>const</span> <span class=nx>first</span> <span class=o>=</span> <span class=nx>numbers</span><span class=p>[</span><span class=mi>0</span><span class=p>];</span>
+</span></span><span class=line><span class=cl><span class=kr>const</span> <span class=nx>second</span> <span class=o>=</span> <span class=nx>numbers</span><span class=p>[</span><span class=mi>1</span><span class=p>];</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=c1>// Cú pháp mới
+</span></span></span><span class=line><span class=cl><span class=c1></span><span class=kr>const</span> <span class=p>[</span><span class=nx>first</span><span class=p>,</span> <span class=nx>second</span><span class=p>,</span> <span class=p>...</span><span class=nx>rest</span><span class=p>]</span> <span class=o>=</span> <span class=nx>numbers</span><span class=p>;</span>
+</span></span><span class=line><span class=cl><span class=nx>console</span><span class=p>.</span><span class=nx>log</span><span class=p>(</span><span class=nx>first</span><span class=p>);</span>  <span class=c1>// 1
+</span></span></span><span class=line><span class=cl><span class=c1></span><span class=nx>console</span><span class=p>.</span><span class=nx>log</span><span class=p>(</span><span class=nx>second</span><span class=p>);</span> <span class=c1>// 2
+</span></span></span><span class=line><span class=cl><span class=c1></span><span class=nx>console</span><span class=p>.</span><span class=nx>log</span><span class=p>(</span><span class=nx>rest</span><span class=p>);</span>   <span class=c1>// [3, 4, 5]
+</span></span></span><span class=line><span class=cl><span class=c1></span>
+</span></span><span class=line><span class=cl><span class=c1>// Với default values
+</span></span></span><span class=line><span class=cl><span class=c1></span><span class=kr>const</span> <span class=p>[</span><span class=nx>a</span><span class=p>,</span> <span class=nx>b</span><span class=p>,</span> <span class=nx>c</span> <span class=o>=</span> <span class=mi>10</span><span class=p>]</span> <span class=o>=</span> <span class=p>[</span><span class=mi>1</span><span class=p>,</span> <span class=mi>2</span><span class=p>];</span>
+</span></span><span class=line><span class=cl><span class=nx>console</span><span class=p>.</span><span class=nx>log</span><span class=p>(</span><span class=nx>c</span><span class=p>);</span> <span class=c1>// 10
+</span></span></span><span class=line><span class=cl><span class=c1></span>
+</span></span><span class=line><span class=cl><span class=c1>// Hoán đổi giá trị
+</span></span></span><span class=line><span class=cl><span class=c1></span><span class=kd>let</span> <span class=nx>x</span> <span class=o>=</span> <span class=mi>1</span><span class=p>,</span> <span class=nx>y</span> <span class=o>=</span> <span class=mi>2</span><span class=p>;</span>
+</span></span><span class=line><span class=cl><span class=p>[</span><span class=nx>x</span><span class=p>,</span> <span class=nx>y</span><span class=p>]</span> <span class=o>=</span> <span class=p>[</span><span class=nx>y</span><span class=p>,</span> <span class=nx>x</span><span class=p>];</span>
+</span></span><span class=line><span class=cl><span class=nx>console</span><span class=p>.</span><span class=nx>log</span><span class=p>(</span><span class=nx>x</span><span class=p>,</span> <span class=nx>y</span><span class=p>);</span> <span class=c1>// 2, 1
+</span></span></span></code></pre></td></tr></table></div></div><h3 id=object-destructuring>Object Destructuring:<a hidden class=anchor aria-hidden=true href=#object-destructuring>#</a></h3><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span><span class=lnt>12
+</span><span class=lnt>13
+</span><span class=lnt>14
+</span><span class=lnt>15
+</span><span class=lnt>16
+</span><span class=lnt>17
+</span><span class=lnt>18
+</span><span class=lnt>19
+</span><span class=lnt>20
+</span><span class=lnt>21
+</span><span class=lnt>22
+</span><span class=lnt>23
+</span><span class=lnt>24
+</span><span class=lnt>25
+</span><span class=lnt>26
+</span><span class=lnt>27
+</span><span class=lnt>28
+</span><span class=lnt>29
+</span><span class=lnt>30
+</span><span class=lnt>31
+</span><span class=lnt>32
+</span><span class=lnt>33
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-javascript data-lang=javascript><span class=line><span class=cl><span class=kr>const</span> <span class=nx>person</span> <span class=o>=</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>    <span class=nx>name</span><span class=o>:</span> <span class=s1>&#39;Nguyễn Văn A&#39;</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>    <span class=nx>age</span><span class=o>:</span> <span class=mi>25</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>    <span class=nx>city</span><span class=o>:</span> <span class=s1>&#39;Hà Nội&#39;</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>    <span class=nx>country</span><span class=o>:</span> <span class=s1>&#39;Việt Nam&#39;</span>
+</span></span><span class=line><span class=cl><span class=p>};</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=c1>// Cú pháp cũ
+</span></span></span><span class=line><span class=cl><span class=c1></span><span class=kr>const</span> <span class=nx>name</span> <span class=o>=</span> <span class=nx>person</span><span class=p>.</span><span class=nx>name</span><span class=p>;</span>
+</span></span><span class=line><span class=cl><span class=kr>const</span> <span class=nx>age</span> <span class=o>=</span> <span class=nx>person</span><span class=p>.</span><span class=nx>age</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=c1>// Cú pháp mới
+</span></span></span><span class=line><span class=cl><span class=c1></span><span class=kr>const</span> <span class=p>{</span> <span class=nx>name</span><span class=p>,</span> <span class=nx>age</span><span class=p>,</span> <span class=nx>city</span> <span class=p>}</span> <span class=o>=</span> <span class=nx>person</span><span class=p>;</span>
+</span></span><span class=line><span class=cl><span class=nx>console</span><span class=p>.</span><span class=nx>log</span><span class=p>(</span><span class=nx>name</span><span class=p>,</span> <span class=nx>age</span><span class=p>,</span> <span class=nx>city</span><span class=p>);</span> <span class=c1>// Nguyễn Văn A, 25, Hà Nội
+</span></span></span><span class=line><span class=cl><span class=c1></span>
+</span></span><span class=line><span class=cl><span class=c1>// Với default values
+</span></span></span><span class=line><span class=cl><span class=c1></span><span class=kr>const</span> <span class=p>{</span> <span class=nx>name</span><span class=p>,</span> <span class=nx>age</span><span class=p>,</span> <span class=nx>salary</span> <span class=o>=</span> <span class=mi>0</span> <span class=p>}</span> <span class=o>=</span> <span class=nx>person</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=c1>// Rename variables
+</span></span></span><span class=line><span class=cl><span class=c1></span><span class=kr>const</span> <span class=p>{</span> <span class=nx>name</span><span class=o>:</span> <span class=nx>fullName</span><span class=p>,</span> <span class=nx>age</span><span class=o>:</span> <span class=nx>years</span> <span class=p>}</span> <span class=o>=</span> <span class=nx>person</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=c1>// Nested destructuring
+</span></span></span><span class=line><span class=cl><span class=c1></span><span class=kr>const</span> <span class=nx>user</span> <span class=o>=</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>    <span class=nx>profile</span><span class=o>:</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>        <span class=nx>name</span><span class=o>:</span> <span class=s1>&#39;John&#39;</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>        <span class=nx>address</span><span class=o>:</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>            <span class=nx>city</span><span class=o>:</span> <span class=s1>&#39;Hanoi&#39;</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>            <span class=nx>country</span><span class=o>:</span> <span class=s1>&#39;Vietnam&#39;</span>
+</span></span><span class=line><span class=cl>        <span class=p>}</span>
+</span></span><span class=line><span class=cl>    <span class=p>}</span>
+</span></span><span class=line><span class=cl><span class=p>};</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=kr>const</span> <span class=p>{</span> <span class=nx>profile</span><span class=o>:</span> <span class=p>{</span> <span class=nx>name</span><span class=p>,</span> <span class=nx>address</span><span class=o>:</span> <span class=p>{</span> <span class=nx>city</span> <span class=p>}</span> <span class=p>}</span> <span class=p>}</span> <span class=o>=</span> <span class=nx>user</span><span class=p>;</span>
+</span></span></code></pre></td></tr></table></div></div><h2 id=3-template-literals>3. Template Literals<a hidden class=anchor aria-hidden=true href=#3-template-literals>#</a></h2><p>Template literals cung cấp cú pháp mới để tạo strings với khả năng nhúng biểu thức.</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span><span class=lnt>12
+</span><span class=lnt>13
+</span><span class=lnt>14
+</span><span class=lnt>15
+</span><span class=lnt>16
+</span><span class=lnt>17
+</span><span class=lnt>18
+</span><span class=lnt>19
+</span><span class=lnt>20
+</span><span class=lnt>21
+</span><span class=lnt>22
+</span><span class=lnt>23
+</span><span class=lnt>24
+</span><span class=lnt>25
+</span><span class=lnt>26
+</span><span class=lnt>27
+</span><span class=lnt>28
+</span><span class=lnt>29
+</span><span class=lnt>30
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-javascript data-lang=javascript><span class=line><span class=cl><span class=kr>const</span> <span class=nx>name</span> <span class=o>=</span> <span class=s1>&#39;Nguyễn Văn A&#39;</span><span class=p>;</span>
+</span></span><span class=line><span class=cl><span class=kr>const</span> <span class=nx>age</span> <span class=o>=</span> <span class=mi>25</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=c1>// Cú pháp cũ
+</span></span></span><span class=line><span class=cl><span class=c1></span><span class=kr>const</span> <span class=nx>message</span> <span class=o>=</span> <span class=s1>&#39;Xin chào, tôi là &#39;</span> <span class=o>+</span> <span class=nx>name</span> <span class=o>+</span> <span class=s1>&#39;, năm nay &#39;</span> <span class=o>+</span> <span class=nx>age</span> <span class=o>+</span> <span class=s1>&#39; tuổi.&#39;</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=c1>// Cú pháp mới
+</span></span></span><span class=line><span class=cl><span class=c1></span><span class=kr>const</span> <span class=nx>message</span> <span class=o>=</span> <span class=sb>`Xin chào, tôi là </span><span class=si>${</span><span class=nx>name</span><span class=si>}</span><span class=sb>, năm nay </span><span class=si>${</span><span class=nx>age</span><span class=si>}</span><span class=sb> tuổi.`</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=c1>// Multi-line strings
+</span></span></span><span class=line><span class=cl><span class=c1></span><span class=kr>const</span> <span class=nx>html</span> <span class=o>=</span> <span class=sb>`
+</span></span></span><span class=line><span class=cl><span class=sb>    &lt;div class=&#34;user-card&#34;&gt;
+</span></span></span><span class=line><span class=cl><span class=sb>        &lt;h2&gt;</span><span class=si>${</span><span class=nx>name</span><span class=si>}</span><span class=sb>&lt;/h2&gt;
+</span></span></span><span class=line><span class=cl><span class=sb>        &lt;p&gt;Tuổi: </span><span class=si>${</span><span class=nx>age</span><span class=si>}</span><span class=sb>&lt;/p&gt;
+</span></span></span><span class=line><span class=cl><span class=sb>        &lt;p&gt;Thời gian: </span><span class=si>${</span><span class=k>new</span> <span class=nb>Date</span><span class=p>().</span><span class=nx>toLocaleString</span><span class=p>()</span><span class=si>}</span><span class=sb>&lt;/p&gt;
+</span></span></span><span class=line><span class=cl><span class=sb>    &lt;/div&gt;
+</span></span></span><span class=line><span class=cl><span class=sb>`</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=c1>// Tagged templates
+</span></span></span><span class=line><span class=cl><span class=c1></span><span class=kd>function</span> <span class=nx>highlight</span><span class=p>(</span><span class=nx>strings</span><span class=p>,</span> <span class=p>...</span><span class=nx>values</span><span class=p>)</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>    <span class=k>return</span> <span class=nx>strings</span><span class=p>.</span><span class=nx>reduce</span><span class=p>((</span><span class=nx>result</span><span class=p>,</span> <span class=nx>string</span><span class=p>,</span> <span class=nx>i</span><span class=p>)</span> <span class=p>=&gt;</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>        <span class=kr>const</span> <span class=nx>value</span> <span class=o>=</span> <span class=nx>values</span><span class=p>[</span><span class=nx>i</span><span class=p>]</span> <span class=o>?</span> <span class=sb>`&lt;mark&gt;</span><span class=si>${</span><span class=nx>values</span><span class=p>[</span><span class=nx>i</span><span class=p>]</span><span class=si>}</span><span class=sb>&lt;/mark&gt;`</span> <span class=o>:</span> <span class=s1>&#39;&#39;</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>        <span class=k>return</span> <span class=nx>result</span> <span class=o>+</span> <span class=nx>string</span> <span class=o>+</span> <span class=nx>value</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>    <span class=p>},</span> <span class=s1>&#39;&#39;</span><span class=p>);</span>
+</span></span><span class=line><span class=cl><span class=p>}</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=kr>const</span> <span class=nx>name</span> <span class=o>=</span> <span class=s1>&#39;JavaScript&#39;</span><span class=p>;</span>
+</span></span><span class=line><span class=cl><span class=kr>const</span> <span class=nx>version</span> <span class=o>=</span> <span class=s1>&#39;ES6&#39;</span><span class=p>;</span>
+</span></span><span class=line><span class=cl><span class=kr>const</span> <span class=nx>highlighted</span> <span class=o>=</span> <span class=nx>highlight</span><span class=sb>`Tôi đang học </span><span class=si>${</span><span class=nx>name</span><span class=si>}</span><span class=sb> </span><span class=si>${</span><span class=nx>version</span><span class=si>}</span><span class=sb>`</span><span class=p>;</span>
+</span></span><span class=line><span class=cl><span class=c1>// Kết quả: &#34;Tôi đang học &lt;mark&gt;JavaScript&lt;/mark&gt; &lt;mark&gt;ES6&lt;/mark&gt;&#34;
+</span></span></span></code></pre></td></tr></table></div></div><h2 id=4-spread-operator-và-rest-parameters>4. Spread Operator và Rest Parameters<a hidden class=anchor aria-hidden=true href=#4-spread-operator-và-rest-parameters>#</a></h2><h3 id=spread-operator>Spread Operator:<a hidden class=anchor aria-hidden=true href=#spread-operator>#</a></h3><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span><span class=lnt>12
+</span><span class=lnt>13
+</span><span class=lnt>14
+</span><span class=lnt>15
+</span><span class=lnt>16
+</span><span class=lnt>17
+</span><span class=lnt>18
+</span><span class=lnt>19
+</span><span class=lnt>20
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-javascript data-lang=javascript><span class=line><span class=cl><span class=c1>// Arrays
+</span></span></span><span class=line><span class=cl><span class=c1></span><span class=kr>const</span> <span class=nx>arr1</span> <span class=o>=</span> <span class=p>[</span><span class=mi>1</span><span class=p>,</span> <span class=mi>2</span><span class=p>,</span> <span class=mi>3</span><span class=p>];</span>
+</span></span><span class=line><span class=cl><span class=kr>const</span> <span class=nx>arr2</span> <span class=o>=</span> <span class=p>[</span><span class=mi>4</span><span class=p>,</span> <span class=mi>5</span><span class=p>,</span> <span class=mi>6</span><span class=p>];</span>
+</span></span><span class=line><span class=cl><span class=kr>const</span> <span class=nx>combined</span> <span class=o>=</span> <span class=p>[...</span><span class=nx>arr1</span><span class=p>,</span> <span class=p>...</span><span class=nx>arr2</span><span class=p>];</span> <span class=c1>// [1, 2, 3, 4, 5, 6]
+</span></span></span><span class=line><span class=cl><span class=c1></span>
+</span></span><span class=line><span class=cl><span class=c1>// Objects
+</span></span></span><span class=line><span class=cl><span class=c1></span><span class=kr>const</span> <span class=nx>obj1</span> <span class=o>=</span> <span class=p>{</span> <span class=nx>a</span><span class=o>:</span> <span class=mi>1</span><span class=p>,</span> <span class=nx>b</span><span class=o>:</span> <span class=mi>2</span> <span class=p>};</span>
+</span></span><span class=line><span class=cl><span class=kr>const</span> <span class=nx>obj2</span> <span class=o>=</span> <span class=p>{</span> <span class=nx>c</span><span class=o>:</span> <span class=mi>3</span><span class=p>,</span> <span class=nx>d</span><span class=o>:</span> <span class=mi>4</span> <span class=p>};</span>
+</span></span><span class=line><span class=cl><span class=kr>const</span> <span class=nx>merged</span> <span class=o>=</span> <span class=p>{</span> <span class=p>...</span><span class=nx>obj1</span><span class=p>,</span> <span class=p>...</span><span class=nx>obj2</span> <span class=p>};</span> <span class=c1>// { a: 1, b: 2, c: 3, d: 4 }
+</span></span></span><span class=line><span class=cl><span class=c1></span>
+</span></span><span class=line><span class=cl><span class=c1>// Function calls
+</span></span></span><span class=line><span class=cl><span class=c1></span><span class=kr>const</span> <span class=nx>numbers</span> <span class=o>=</span> <span class=p>[</span><span class=mi>1</span><span class=p>,</span> <span class=mi>2</span><span class=p>,</span> <span class=mi>3</span><span class=p>,</span> <span class=mi>4</span><span class=p>,</span> <span class=mi>5</span><span class=p>];</span>
+</span></span><span class=line><span class=cl><span class=kr>const</span> <span class=nx>max</span> <span class=o>=</span> <span class=nb>Math</span><span class=p>.</span><span class=nx>max</span><span class=p>(...</span><span class=nx>numbers</span><span class=p>);</span> <span class=c1>// 5
+</span></span></span><span class=line><span class=cl><span class=c1></span>
+</span></span><span class=line><span class=cl><span class=c1>// Copy arrays/objects
+</span></span></span><span class=line><span class=cl><span class=c1></span><span class=kr>const</span> <span class=nx>originalArray</span> <span class=o>=</span> <span class=p>[</span><span class=mi>1</span><span class=p>,</span> <span class=mi>2</span><span class=p>,</span> <span class=mi>3</span><span class=p>];</span>
+</span></span><span class=line><span class=cl><span class=kr>const</span> <span class=nx>copiedArray</span> <span class=o>=</span> <span class=p>[...</span><span class=nx>originalArray</span><span class=p>];</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=kr>const</span> <span class=nx>originalObject</span> <span class=o>=</span> <span class=p>{</span> <span class=nx>x</span><span class=o>:</span> <span class=mi>1</span><span class=p>,</span> <span class=nx>y</span><span class=o>:</span> <span class=mi>2</span> <span class=p>};</span>
+</span></span><span class=line><span class=cl><span class=kr>const</span> <span class=nx>copiedObject</span> <span class=o>=</span> <span class=p>{</span> <span class=p>...</span><span class=nx>originalObject</span> <span class=p>};</span>
+</span></span></code></pre></td></tr></table></div></div><h3 id=rest-parameters>Rest Parameters:<a hidden class=anchor aria-hidden=true href=#rest-parameters>#</a></h3><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span><span class=lnt>12
+</span><span class=lnt>13
+</span><span class=lnt>14
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-javascript data-lang=javascript><span class=line><span class=cl><span class=c1>// Thu thập tất cả arguments thành một array
+</span></span></span><span class=line><span class=cl><span class=c1></span><span class=kd>function</span> <span class=nx>sum</span><span class=p>(...</span><span class=nx>numbers</span><span class=p>)</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>    <span class=k>return</span> <span class=nx>numbers</span><span class=p>.</span><span class=nx>reduce</span><span class=p>((</span><span class=nx>total</span><span class=p>,</span> <span class=nx>num</span><span class=p>)</span> <span class=p>=&gt;</span> <span class=nx>total</span> <span class=o>+</span> <span class=nx>num</span><span class=p>,</span> <span class=mi>0</span><span class=p>);</span>
+</span></span><span class=line><span class=cl><span class=p>}</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=nx>console</span><span class=p>.</span><span class=nx>log</span><span class=p>(</span><span class=nx>sum</span><span class=p>(</span><span class=mi>1</span><span class=p>,</span> <span class=mi>2</span><span class=p>,</span> <span class=mi>3</span><span class=p>,</span> <span class=mi>4</span><span class=p>,</span> <span class=mi>5</span><span class=p>));</span> <span class=c1>// 15
+</span></span></span><span class=line><span class=cl><span class=c1></span>
+</span></span><span class=line><span class=cl><span class=c1>// Kết hợp với destructuring
+</span></span></span><span class=line><span class=cl><span class=c1></span><span class=kd>function</span> <span class=nx>greet</span><span class=p>(</span><span class=nx>firstName</span><span class=p>,</span> <span class=nx>lastName</span><span class=p>,</span> <span class=p>...</span><span class=nx>titles</span><span class=p>)</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>    <span class=nx>console</span><span class=p>.</span><span class=nx>log</span><span class=p>(</span><span class=sb>`Xin chào </span><span class=si>${</span><span class=nx>firstName</span><span class=si>}</span><span class=sb> </span><span class=si>${</span><span class=nx>lastName</span><span class=si>}</span><span class=sb>`</span><span class=p>);</span>
+</span></span><span class=line><span class=cl>    <span class=nx>console</span><span class=p>.</span><span class=nx>log</span><span class=p>(</span><span class=s1>&#39;Danh hiệu:&#39;</span><span class=p>,</span> <span class=nx>titles</span><span class=p>);</span>
+</span></span><span class=line><span class=cl><span class=p>}</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=nx>greet</span><span class=p>(</span><span class=s1>&#39;Nguyễn&#39;</span><span class=p>,</span> <span class=s1>&#39;Văn A&#39;</span><span class=p>,</span> <span class=s1>&#39;Tiến sĩ&#39;</span><span class=p>,</span> <span class=s1>&#39;Giáo sư&#39;</span><span class=p>);</span>
+</span></span></code></pre></td></tr></table></div></div><h2 id=5-classes>5. Classes<a hidden class=anchor aria-hidden=true href=#5-classes>#</a></h2><p>ES6 giới thiệu cú pháp class cho JavaScript.</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span><span class=lnt>12
+</span><span class=lnt>13
+</span><span class=lnt>14
+</span><span class=lnt>15
+</span><span class=lnt>16
+</span><span class=lnt>17
+</span><span class=lnt>18
+</span><span class=lnt>19
+</span><span class=lnt>20
+</span><span class=lnt>21
+</span><span class=lnt>22
+</span><span class=lnt>23
+</span><span class=lnt>24
+</span><span class=lnt>25
+</span><span class=lnt>26
+</span><span class=lnt>27
+</span><span class=lnt>28
+</span><span class=lnt>29
+</span><span class=lnt>30
+</span><span class=lnt>31
+</span><span class=lnt>32
+</span><span class=lnt>33
+</span><span class=lnt>34
+</span><span class=lnt>35
+</span><span class=lnt>36
+</span><span class=lnt>37
+</span><span class=lnt>38
+</span><span class=lnt>39
+</span><span class=lnt>40
+</span><span class=lnt>41
+</span><span class=lnt>42
+</span><span class=lnt>43
+</span><span class=lnt>44
+</span><span class=lnt>45
+</span><span class=lnt>46
+</span><span class=lnt>47
+</span><span class=lnt>48
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-javascript data-lang=javascript><span class=line><span class=cl><span class=kr>class</span> <span class=nx>Person</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>    <span class=nx>constructor</span><span class=p>(</span><span class=nx>name</span><span class=p>,</span> <span class=nx>age</span><span class=p>)</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>        <span class=k>this</span><span class=p>.</span><span class=nx>name</span> <span class=o>=</span> <span class=nx>name</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>        <span class=k>this</span><span class=p>.</span><span class=nx>age</span> <span class=o>=</span> <span class=nx>age</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>    <span class=p>}</span>
+</span></span><span class=line><span class=cl>    
+</span></span><span class=line><span class=cl>    <span class=c1>// Method
+</span></span></span><span class=line><span class=cl><span class=c1></span>    <span class=nx>greet</span><span class=p>()</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>        <span class=k>return</span> <span class=sb>`Xin chào, tôi là </span><span class=si>${</span><span class=k>this</span><span class=p>.</span><span class=nx>name</span><span class=si>}</span><span class=sb>`</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>    <span class=p>}</span>
+</span></span><span class=line><span class=cl>    
+</span></span><span class=line><span class=cl>    <span class=c1>// Getter
+</span></span></span><span class=line><span class=cl><span class=c1></span>    <span class=nx>get</span> <span class=nx>info</span><span class=p>()</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>        <span class=k>return</span> <span class=sb>`</span><span class=si>${</span><span class=k>this</span><span class=p>.</span><span class=nx>name</span><span class=si>}</span><span class=sb> (</span><span class=si>${</span><span class=k>this</span><span class=p>.</span><span class=nx>age</span><span class=si>}</span><span class=sb> tuổi)`</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>    <span class=p>}</span>
+</span></span><span class=line><span class=cl>    
+</span></span><span class=line><span class=cl>    <span class=c1>// Setter
+</span></span></span><span class=line><span class=cl><span class=c1></span>    <span class=nx>set</span> <span class=nx>info</span><span class=p>(</span><span class=nx>value</span><span class=p>)</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>        <span class=p>[</span><span class=k>this</span><span class=p>.</span><span class=nx>name</span><span class=p>,</span> <span class=k>this</span><span class=p>.</span><span class=nx>age</span><span class=p>]</span> <span class=o>=</span> <span class=nx>value</span><span class=p>.</span><span class=nx>split</span><span class=p>(</span><span class=s1>&#39; &#39;</span><span class=p>);</span>
+</span></span><span class=line><span class=cl>    <span class=p>}</span>
+</span></span><span class=line><span class=cl>    
+</span></span><span class=line><span class=cl>    <span class=c1>// Static method
+</span></span></span><span class=line><span class=cl><span class=c1></span>    <span class=kr>static</span> <span class=nx>createAdult</span><span class=p>(</span><span class=nx>name</span><span class=p>)</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>        <span class=k>return</span> <span class=k>new</span> <span class=nx>Person</span><span class=p>(</span><span class=nx>name</span><span class=p>,</span> <span class=mi>18</span><span class=p>);</span>
+</span></span><span class=line><span class=cl>    <span class=p>}</span>
+</span></span><span class=line><span class=cl><span class=p>}</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=c1>// Inheritance
+</span></span></span><span class=line><span class=cl><span class=c1></span><span class=kr>class</span> <span class=nx>Student</span> <span class=kr>extends</span> <span class=nx>Person</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>    <span class=nx>constructor</span><span class=p>(</span><span class=nx>name</span><span class=p>,</span> <span class=nx>age</span><span class=p>,</span> <span class=nx>school</span><span class=p>)</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>        <span class=kr>super</span><span class=p>(</span><span class=nx>name</span><span class=p>,</span> <span class=nx>age</span><span class=p>);</span>
+</span></span><span class=line><span class=cl>        <span class=k>this</span><span class=p>.</span><span class=nx>school</span> <span class=o>=</span> <span class=nx>school</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>    <span class=p>}</span>
+</span></span><span class=line><span class=cl>    
+</span></span><span class=line><span class=cl>    <span class=nx>study</span><span class=p>()</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>        <span class=k>return</span> <span class=sb>`</span><span class=si>${</span><span class=k>this</span><span class=p>.</span><span class=nx>name</span><span class=si>}</span><span class=sb> đang học tại </span><span class=si>${</span><span class=k>this</span><span class=p>.</span><span class=nx>school</span><span class=si>}</span><span class=sb>`</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>    <span class=p>}</span>
+</span></span><span class=line><span class=cl>    
+</span></span><span class=line><span class=cl>    <span class=c1>// Override method
+</span></span></span><span class=line><span class=cl><span class=c1></span>    <span class=nx>greet</span><span class=p>()</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>        <span class=k>return</span> <span class=sb>`</span><span class=si>${</span><span class=kr>super</span><span class=p>.</span><span class=nx>greet</span><span class=p>()</span><span class=si>}</span><span class=sb>, tôi là sinh viên`</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>    <span class=p>}</span>
+</span></span><span class=line><span class=cl><span class=p>}</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=c1>// Sử dụng
+</span></span></span><span class=line><span class=cl><span class=c1></span><span class=kr>const</span> <span class=nx>student</span> <span class=o>=</span> <span class=k>new</span> <span class=nx>Student</span><span class=p>(</span><span class=s1>&#39;Nguyễn Văn B&#39;</span><span class=p>,</span> <span class=mi>20</span><span class=p>,</span> <span class=s1>&#39;Đại học Bách Khoa&#39;</span><span class=p>);</span>
+</span></span><span class=line><span class=cl><span class=nx>console</span><span class=p>.</span><span class=nx>log</span><span class=p>(</span><span class=nx>student</span><span class=p>.</span><span class=nx>greet</span><span class=p>());</span> <span class=c1>// Xin chào, tôi là Nguyễn Văn B, tôi là sinh viên
+</span></span></span><span class=line><span class=cl><span class=c1></span><span class=nx>console</span><span class=p>.</span><span class=nx>log</span><span class=p>(</span><span class=nx>student</span><span class=p>.</span><span class=nx>study</span><span class=p>());</span> <span class=c1>// Nguyễn Văn B đang học tại Đại học Bách Khoa
+</span></span></span></code></pre></td></tr></table></div></div><h2 id=6-modules-importexport>6. Modules (Import/Export)<a hidden class=anchor aria-hidden=true href=#6-modules-importexport>#</a></h2><h3 id=export>Export:<a hidden class=anchor aria-hidden=true href=#export>#</a></h3><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span><span class=lnt>12
+</span><span class=lnt>13
+</span><span class=lnt>14
+</span><span class=lnt>15
+</span><span class=lnt>16
+</span><span class=lnt>17
+</span><span class=lnt>18
+</span><span class=lnt>19
+</span><span class=lnt>20
+</span><span class=lnt>21
+</span><span class=lnt>22
+</span><span class=lnt>23
+</span><span class=lnt>24
+</span><span class=lnt>25
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-javascript data-lang=javascript><span class=line><span class=cl><span class=c1>// math.js
+</span></span></span><span class=line><span class=cl><span class=c1></span><span class=kr>export</span> <span class=kr>const</span> <span class=nx>PI</span> <span class=o>=</span> <span class=mf>3.14159</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=kr>export</span> <span class=kd>function</span> <span class=nx>add</span><span class=p>(</span><span class=nx>a</span><span class=p>,</span> <span class=nx>b</span><span class=p>)</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>    <span class=k>return</span> <span class=nx>a</span> <span class=o>+</span> <span class=nx>b</span><span class=p>;</span>
+</span></span><span class=line><span class=cl><span class=p>}</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=kr>export</span> <span class=kd>function</span> <span class=nx>multiply</span><span class=p>(</span><span class=nx>a</span><span class=p>,</span> <span class=nx>b</span><span class=p>)</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>    <span class=k>return</span> <span class=nx>a</span> <span class=o>*</span> <span class=nx>b</span><span class=p>;</span>
+</span></span><span class=line><span class=cl><span class=p>}</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=c1>// Default export
+</span></span></span><span class=line><span class=cl><span class=c1></span><span class=kr>export</span> <span class=k>default</span> <span class=kr>class</span> <span class=nx>Calculator</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>    <span class=nx>constructor</span><span class=p>()</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>        <span class=k>this</span><span class=p>.</span><span class=nx>result</span> <span class=o>=</span> <span class=mi>0</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>    <span class=p>}</span>
+</span></span><span class=line><span class=cl>    
+</span></span><span class=line><span class=cl>    <span class=nx>calculate</span><span class=p>(</span><span class=nx>operation</span><span class=p>,</span> <span class=nx>a</span><span class=p>,</span> <span class=nx>b</span><span class=p>)</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>        <span class=k>switch</span><span class=p>(</span><span class=nx>operation</span><span class=p>)</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>            <span class=k>case</span> <span class=s1>&#39;add&#39;</span><span class=o>:</span> <span class=k>return</span> <span class=nx>a</span> <span class=o>+</span> <span class=nx>b</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>            <span class=k>case</span> <span class=s1>&#39;multiply&#39;</span><span class=o>:</span> <span class=k>return</span> <span class=nx>a</span> <span class=o>*</span> <span class=nx>b</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>            <span class=k>default</span><span class=o>:</span> <span class=k>return</span> <span class=mi>0</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>        <span class=p>}</span>
+</span></span><span class=line><span class=cl>    <span class=p>}</span>
+</span></span><span class=line><span class=cl><span class=p>}</span>
+</span></span></code></pre></td></tr></table></div></div><h3 id=import>Import:<a hidden class=anchor aria-hidden=true href=#import>#</a></h3><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span><span class=lnt>12
+</span><span class=lnt>13
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-javascript data-lang=javascript><span class=line><span class=cl><span class=c1>// main.js
+</span></span></span><span class=line><span class=cl><span class=c1></span><span class=kr>import</span> <span class=nx>Calculator</span><span class=p>,</span> <span class=p>{</span> <span class=nx>PI</span><span class=p>,</span> <span class=nx>add</span><span class=p>,</span> <span class=nx>multiply</span> <span class=p>}</span> <span class=nx>from</span> <span class=s1>&#39;./math.js&#39;</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=c1>// Sử dụng
+</span></span></span><span class=line><span class=cl><span class=c1></span><span class=nx>console</span><span class=p>.</span><span class=nx>log</span><span class=p>(</span><span class=nx>PI</span><span class=p>);</span> <span class=c1>// 3.14159
+</span></span></span><span class=line><span class=cl><span class=c1></span><span class=nx>console</span><span class=p>.</span><span class=nx>log</span><span class=p>(</span><span class=nx>add</span><span class=p>(</span><span class=mi>2</span><span class=p>,</span> <span class=mi>3</span><span class=p>));</span> <span class=c1>// 5
+</span></span></span><span class=line><span class=cl><span class=c1></span>
+</span></span><span class=line><span class=cl><span class=kr>const</span> <span class=nx>calc</span> <span class=o>=</span> <span class=k>new</span> <span class=nx>Calculator</span><span class=p>();</span>
+</span></span><span class=line><span class=cl><span class=nx>console</span><span class=p>.</span><span class=nx>log</span><span class=p>(</span><span class=nx>calc</span><span class=p>.</span><span class=nx>calculate</span><span class=p>(</span><span class=s1>&#39;add&#39;</span><span class=p>,</span> <span class=mi>5</span><span class=p>,</span> <span class=mi>3</span><span class=p>));</span> <span class=c1>// 8
+</span></span></span><span class=line><span class=cl><span class=c1></span>
+</span></span><span class=line><span class=cl><span class=c1>// Import tất cả
+</span></span></span><span class=line><span class=cl><span class=c1></span><span class=kr>import</span> <span class=o>*</span> <span class=nx>as</span> <span class=nx>MathUtils</span> <span class=nx>from</span> <span class=s1>&#39;./math.js&#39;</span><span class=p>;</span>
+</span></span><span class=line><span class=cl><span class=nx>console</span><span class=p>.</span><span class=nx>log</span><span class=p>(</span><span class=nx>MathUtils</span><span class=p>.</span><span class=nx>PI</span><span class=p>);</span>
+</span></span></code></pre></td></tr></table></div></div><h2 id=7-promises-và-asyncawait>7. Promises và Async/Await<a hidden class=anchor aria-hidden=true href=#7-promises-và-asyncawait>#</a></h2><h3 id=promises>Promises:<a hidden class=anchor aria-hidden=true href=#promises>#</a></h3><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span><span class=lnt>12
+</span><span class=lnt>13
+</span><span class=lnt>14
+</span><span class=lnt>15
+</span><span class=lnt>16
+</span><span class=lnt>17
+</span><span class=lnt>18
+</span><span class=lnt>19
+</span><span class=lnt>20
+</span><span class=lnt>21
+</span><span class=lnt>22
+</span><span class=lnt>23
+</span><span class=lnt>24
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-javascript data-lang=javascript><span class=line><span class=cl><span class=kd>function</span> <span class=nx>fetchData</span><span class=p>(</span><span class=nx>url</span><span class=p>)</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>    <span class=k>return</span> <span class=k>new</span> <span class=nb>Promise</span><span class=p>((</span><span class=nx>resolve</span><span class=p>,</span> <span class=nx>reject</span><span class=p>)</span> <span class=p>=&gt;</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>        <span class=nx>setTimeout</span><span class=p>(()</span> <span class=p>=&gt;</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>            <span class=k>if</span> <span class=p>(</span><span class=nx>url</span><span class=p>)</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>                <span class=nx>resolve</span><span class=p>({</span> <span class=nx>data</span><span class=o>:</span> <span class=s1>&#39;Dữ liệu từ server&#39;</span><span class=p>,</span> <span class=nx>url</span> <span class=p>});</span>
+</span></span><span class=line><span class=cl>            <span class=p>}</span> <span class=k>else</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>                <span class=nx>reject</span><span class=p>(</span><span class=k>new</span> <span class=nb>Error</span><span class=p>(</span><span class=s1>&#39;URL không hợp lệ&#39;</span><span class=p>));</span>
+</span></span><span class=line><span class=cl>            <span class=p>}</span>
+</span></span><span class=line><span class=cl>        <span class=p>},</span> <span class=mi>1000</span><span class=p>);</span>
+</span></span><span class=line><span class=cl>    <span class=p>});</span>
+</span></span><span class=line><span class=cl><span class=p>}</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=c1>// Sử dụng Promise
+</span></span></span><span class=line><span class=cl><span class=c1></span><span class=nx>fetchData</span><span class=p>(</span><span class=s1>&#39;https://api.example.com&#39;</span><span class=p>)</span>
+</span></span><span class=line><span class=cl>    <span class=p>.</span><span class=nx>then</span><span class=p>(</span><span class=nx>response</span> <span class=p>=&gt;</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>        <span class=nx>console</span><span class=p>.</span><span class=nx>log</span><span class=p>(</span><span class=s1>&#39;Thành công:&#39;</span><span class=p>,</span> <span class=nx>response</span><span class=p>);</span>
+</span></span><span class=line><span class=cl>        <span class=k>return</span> <span class=nx>fetchData</span><span class=p>(</span><span class=s1>&#39;https://api.example.com/users&#39;</span><span class=p>);</span>
+</span></span><span class=line><span class=cl>    <span class=p>})</span>
+</span></span><span class=line><span class=cl>    <span class=p>.</span><span class=nx>then</span><span class=p>(</span><span class=nx>userData</span> <span class=p>=&gt;</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>        <span class=nx>console</span><span class=p>.</span><span class=nx>log</span><span class=p>(</span><span class=s1>&#39;Dữ liệu user:&#39;</span><span class=p>,</span> <span class=nx>userData</span><span class=p>);</span>
+</span></span><span class=line><span class=cl>    <span class=p>})</span>
+</span></span><span class=line><span class=cl>    <span class=p>.</span><span class=k>catch</span><span class=p>(</span><span class=nx>error</span> <span class=p>=&gt;</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>        <span class=nx>console</span><span class=p>.</span><span class=nx>error</span><span class=p>(</span><span class=s1>&#39;Lỗi:&#39;</span><span class=p>,</span> <span class=nx>error</span><span class=p>.</span><span class=nx>message</span><span class=p>);</span>
+</span></span><span class=line><span class=cl>    <span class=p>});</span>
+</span></span></code></pre></td></tr></table></div></div><h3 id=asyncawait>Async/Await:<a hidden class=anchor aria-hidden=true href=#asyncawait>#</a></h3><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span><span class=lnt>12
+</span><span class=lnt>13
+</span><span class=lnt>14
+</span><span class=lnt>15
+</span><span class=lnt>16
+</span><span class=lnt>17
+</span><span class=lnt>18
+</span><span class=lnt>19
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-javascript data-lang=javascript><span class=line><span class=cl><span class=kr>async</span> <span class=kd>function</span> <span class=nx>loadData</span><span class=p>()</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>    <span class=k>try</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>        <span class=kr>const</span> <span class=nx>response</span> <span class=o>=</span> <span class=kr>await</span> <span class=nx>fetchData</span><span class=p>(</span><span class=s1>&#39;https://api.example.com&#39;</span><span class=p>);</span>
+</span></span><span class=line><span class=cl>        <span class=nx>console</span><span class=p>.</span><span class=nx>log</span><span class=p>(</span><span class=s1>&#39;Thành công:&#39;</span><span class=p>,</span> <span class=nx>response</span><span class=p>);</span>
+</span></span><span class=line><span class=cl>        
+</span></span><span class=line><span class=cl>        <span class=kr>const</span> <span class=nx>userData</span> <span class=o>=</span> <span class=kr>await</span> <span class=nx>fetchData</span><span class=p>(</span><span class=s1>&#39;https://api.example.com/users&#39;</span><span class=p>);</span>
+</span></span><span class=line><span class=cl>        <span class=nx>console</span><span class=p>.</span><span class=nx>log</span><span class=p>(</span><span class=s1>&#39;Dữ liệu user:&#39;</span><span class=p>,</span> <span class=nx>userData</span><span class=p>);</span>
+</span></span><span class=line><span class=cl>        
+</span></span><span class=line><span class=cl>        <span class=k>return</span> <span class=p>{</span> <span class=nx>response</span><span class=p>,</span> <span class=nx>userData</span> <span class=p>};</span>
+</span></span><span class=line><span class=cl>    <span class=p>}</span> <span class=k>catch</span> <span class=p>(</span><span class=nx>error</span><span class=p>)</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>        <span class=nx>console</span><span class=p>.</span><span class=nx>error</span><span class=p>(</span><span class=s1>&#39;Lỗi:&#39;</span><span class=p>,</span> <span class=nx>error</span><span class=p>.</span><span class=nx>message</span><span class=p>);</span>
+</span></span><span class=line><span class=cl>        <span class=k>throw</span> <span class=nx>error</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>    <span class=p>}</span>
+</span></span><span class=line><span class=cl><span class=p>}</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=c1>// Sử dụng
+</span></span></span><span class=line><span class=cl><span class=c1></span><span class=nx>loadData</span><span class=p>()</span>
+</span></span><span class=line><span class=cl>    <span class=p>.</span><span class=nx>then</span><span class=p>(</span><span class=nx>result</span> <span class=p>=&gt;</span> <span class=nx>console</span><span class=p>.</span><span class=nx>log</span><span class=p>(</span><span class=s1>&#39;Hoàn thành:&#39;</span><span class=p>,</span> <span class=nx>result</span><span class=p>))</span>
+</span></span><span class=line><span class=cl>    <span class=p>.</span><span class=k>catch</span><span class=p>(</span><span class=nx>error</span> <span class=p>=&gt;</span> <span class=nx>console</span><span class=p>.</span><span class=nx>error</span><span class=p>(</span><span class=s1>&#39;Lỗi cuối:&#39;</span><span class=p>,</span> <span class=nx>error</span><span class=p>));</span>
+</span></span></code></pre></td></tr></table></div></div><h2 id=8-map-và-set>8. Map và Set<a hidden class=anchor aria-hidden=true href=#8-map-và-set>#</a></h2><h3 id=map>Map:<a hidden class=anchor aria-hidden=true href=#map>#</a></h3><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span><span class=lnt>12
+</span><span class=lnt>13
+</span><span class=lnt>14
+</span><span class=lnt>15
+</span><span class=lnt>16
+</span><span class=lnt>17
+</span><span class=lnt>18
+</span><span class=lnt>19
+</span><span class=lnt>20
+</span><span class=lnt>21
+</span><span class=lnt>22
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-javascript data-lang=javascript><span class=line><span class=cl><span class=kr>const</span> <span class=nx>userMap</span> <span class=o>=</span> <span class=k>new</span> <span class=nx>Map</span><span class=p>();</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=c1>// Thêm dữ liệu
+</span></span></span><span class=line><span class=cl><span class=c1></span><span class=nx>userMap</span><span class=p>.</span><span class=nx>set</span><span class=p>(</span><span class=s1>&#39;user1&#39;</span><span class=p>,</span> <span class=p>{</span> <span class=nx>name</span><span class=o>:</span> <span class=s1>&#39;Nguyễn Văn A&#39;</span><span class=p>,</span> <span class=nx>age</span><span class=o>:</span> <span class=mi>25</span> <span class=p>});</span>
+</span></span><span class=line><span class=cl><span class=nx>userMap</span><span class=p>.</span><span class=nx>set</span><span class=p>(</span><span class=s1>&#39;user2&#39;</span><span class=p>,</span> <span class=p>{</span> <span class=nx>name</span><span class=o>:</span> <span class=s1>&#39;Trần Thị B&#39;</span><span class=p>,</span> <span class=nx>age</span><span class=o>:</span> <span class=mi>30</span> <span class=p>});</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=c1>// Lấy dữ liệu
+</span></span></span><span class=line><span class=cl><span class=c1></span><span class=nx>console</span><span class=p>.</span><span class=nx>log</span><span class=p>(</span><span class=nx>userMap</span><span class=p>.</span><span class=nx>get</span><span class=p>(</span><span class=s1>&#39;user1&#39;</span><span class=p>));</span> <span class=c1>// { name: &#39;Nguyễn Văn A&#39;, age: 25 }
+</span></span></span><span class=line><span class=cl><span class=c1></span>
+</span></span><span class=line><span class=cl><span class=c1>// Kiểm tra tồn tại
+</span></span></span><span class=line><span class=cl><span class=c1></span><span class=nx>console</span><span class=p>.</span><span class=nx>log</span><span class=p>(</span><span class=nx>userMap</span><span class=p>.</span><span class=nx>has</span><span class=p>(</span><span class=s1>&#39;user1&#39;</span><span class=p>));</span> <span class=c1>// true
+</span></span></span><span class=line><span class=cl><span class=c1></span>
+</span></span><span class=line><span class=cl><span class=c1>// Xóa
+</span></span></span><span class=line><span class=cl><span class=c1></span><span class=nx>userMap</span><span class=p>.</span><span class=k>delete</span><span class=p>(</span><span class=s1>&#39;user1&#39;</span><span class=p>);</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=c1>// Kích thước
+</span></span></span><span class=line><span class=cl><span class=c1></span><span class=nx>console</span><span class=p>.</span><span class=nx>log</span><span class=p>(</span><span class=nx>userMap</span><span class=p>.</span><span class=nx>size</span><span class=p>);</span> <span class=c1>// 1
+</span></span></span><span class=line><span class=cl><span class=c1></span>
+</span></span><span class=line><span class=cl><span class=c1>// Iterate
+</span></span></span><span class=line><span class=cl><span class=c1></span><span class=k>for</span> <span class=p>(</span><span class=kr>const</span> <span class=p>[</span><span class=nx>key</span><span class=p>,</span> <span class=nx>value</span><span class=p>]</span> <span class=k>of</span> <span class=nx>userMap</span><span class=p>)</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>    <span class=nx>console</span><span class=p>.</span><span class=nx>log</span><span class=p>(</span><span class=nx>key</span><span class=p>,</span> <span class=nx>value</span><span class=p>);</span>
+</span></span><span class=line><span class=cl><span class=p>}</span>
+</span></span></code></pre></td></tr></table></div></div><h3 id=set>Set:<a hidden class=anchor aria-hidden=true href=#set>#</a></h3><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span><span class=lnt>12
+</span><span class=lnt>13
+</span><span class=lnt>14
+</span><span class=lnt>15
+</span><span class=lnt>16
+</span><span class=lnt>17
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-javascript data-lang=javascript><span class=line><span class=cl><span class=kr>const</span> <span class=nx>uniqueNumbers</span> <span class=o>=</span> <span class=k>new</span> <span class=nx>Set</span><span class=p>([</span><span class=mi>1</span><span class=p>,</span> <span class=mi>2</span><span class=p>,</span> <span class=mi>3</span><span class=p>,</span> <span class=mi>3</span><span class=p>,</span> <span class=mi>4</span><span class=p>,</span> <span class=mi>4</span><span class=p>,</span> <span class=mi>5</span><span class=p>]);</span>
+</span></span><span class=line><span class=cl><span class=nx>console</span><span class=p>.</span><span class=nx>log</span><span class=p>(</span><span class=nx>uniqueNumbers</span><span class=p>);</span> <span class=c1>// Set { 1, 2, 3, 4, 5 }
+</span></span></span><span class=line><span class=cl><span class=c1></span>
+</span></span><span class=line><span class=cl><span class=c1>// Thêm phần tử
+</span></span></span><span class=line><span class=cl><span class=c1></span><span class=nx>uniqueNumbers</span><span class=p>.</span><span class=nx>add</span><span class=p>(</span><span class=mi>6</span><span class=p>);</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=c1>// Kiểm tra tồn tại
+</span></span></span><span class=line><span class=cl><span class=c1></span><span class=nx>console</span><span class=p>.</span><span class=nx>log</span><span class=p>(</span><span class=nx>uniqueNumbers</span><span class=p>.</span><span class=nx>has</span><span class=p>(</span><span class=mi>3</span><span class=p>));</span> <span class=c1>// true
+</span></span></span><span class=line><span class=cl><span class=c1></span>
+</span></span><span class=line><span class=cl><span class=c1>// Xóa
+</span></span></span><span class=line><span class=cl><span class=c1></span><span class=nx>uniqueNumbers</span><span class=p>.</span><span class=k>delete</span><span class=p>(</span><span class=mi>3</span><span class=p>);</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=c1>// Kích thước
+</span></span></span><span class=line><span class=cl><span class=c1></span><span class=nx>console</span><span class=p>.</span><span class=nx>log</span><span class=p>(</span><span class=nx>uniqueNumbers</span><span class=p>.</span><span class=nx>size</span><span class=p>);</span> <span class=c1>// 5
+</span></span></span><span class=line><span class=cl><span class=c1></span>
+</span></span><span class=line><span class=cl><span class=c1>// Convert to Array
+</span></span></span><span class=line><span class=cl><span class=c1></span><span class=kr>const</span> <span class=nx>array</span> <span class=o>=</span> <span class=p>[...</span><span class=nx>uniqueNumbers</span><span class=p>];</span>
+</span></span></code></pre></td></tr></table></div></div><h2 id=kết-luận>Kết Luận<a hidden class=anchor aria-hidden=true href=#kết-luận>#</a></h2><p>ES6+ đã làm cho JavaScript trở nên mạnh mẽ và dễ sử dụng hơn rất nhiều. Những tính năng này giúp code trở nên:</p><ul><li><strong>Ngắn gọn hơn</strong>: Arrow functions, destructuring</li><li><strong>Dễ đọc hơn</strong>: Template literals, classes</li><li><strong>Mạnh mẽ hơn</strong>: Promises, async/await</li><li><strong>Linh hoạt hơn</strong>: Modules, spread operator</li></ul><p>Hãy thực hành những tính năng này trong các dự án của bạn để nắm vững chúng. Trong bài viết tiếp theo, tôi sẽ hướng dẫn về React và cách sử dụng những tính năng ES6+ này trong thực tế! 🚀</p></div><footer class=post-footer><ul class=post-tags><li><a href=https://nguyenthanhluan09060024.github.io/my-programming-blog/tags/javascript/>Javascript</a></li><li><a href=https://nguyenthanhluan09060024.github.io/my-programming-blog/tags/es6/>Es6</a></li><li><a href=https://nguyenthanhluan09060024.github.io/my-programming-blog/tags/modern-js/>Modern-Js</a></li><li><a href=https://nguyenthanhluan09060024.github.io/my-programming-blog/tags/programming/>Programming</a></li></ul><nav class=paginav><a class=prev href=https://nguyenthanhluan09060024.github.io/my-programming-blog/posts/java-spring-boot-tutorial/><span class=title>« Prev</span><br><span>Hướng Dẫn Spring Boot Cho Người Mới Bắt Đầu</span>
+</a><a class=next href=https://nguyenthanhluan09060024.github.io/my-programming-blog/posts/java-spring-security/><span class=title>Next »</span><br><span>Spring Security - Bảo Mật Ứng Dụng Java</span></a></nav></footer></article></main><footer class=footer><span>&copy; 2025 <a href=https://nguyenthanhluan09060024.github.io/my-programming-blog/>My Programming Blog</a></span> ·
+<span>Powered by
+<a href=https://gohugo.io/ rel="noopener noreferrer" target=_blank>Hugo</a> &
+<a href=https://github.com/adityatelange/hugo-PaperMod/ rel=noopener target=_blank>PaperMod</a></span></footer><a href=#top aria-label="go to top" title="Go to Top (Alt + G)" class=top-link id=top-link accesskey=g><svg viewBox="0 0 12 6" fill="currentColor"><path d="M12 6H0l6-6z"/></svg>
+</a><script>let menu=document.getElementById("menu");menu&&(menu.scrollLeft=localStorage.getItem("menu-scroll-position"),menu.onscroll=function(){localStorage.setItem("menu-scroll-position",menu.scrollLeft)}),document.querySelectorAll('a[href^="#"]').forEach(e=>{e.addEventListener("click",function(e){e.preventDefault();var t=this.getAttribute("href").substr(1);window.matchMedia("(prefers-reduced-motion: reduce)").matches?document.querySelector(`[id='${decodeURIComponent(t)}']`).scrollIntoView():document.querySelector(`[id='${decodeURIComponent(t)}']`).scrollIntoView({behavior:"smooth"}),t==="top"?history.replaceState(null,null," "):history.pushState(null,null,`#${t}`)})})</script><script>var mybutton=document.getElementById("top-link");window.onscroll=function(){document.body.scrollTop>800||document.documentElement.scrollTop>800?(mybutton.style.visibility="visible",mybutton.style.opacity="1"):(mybutton.style.visibility="hidden",mybutton.style.opacity="0")}</script><script>document.getElementById("theme-toggle").addEventListener("click",()=>{document.body.className.includes("dark")?(document.body.classList.remove("dark"),localStorage.setItem("pref-theme","light")):(document.body.classList.add("dark"),localStorage.setItem("pref-theme","dark"))})</script><script>document.querySelectorAll("pre > code").forEach(e=>{const n=e.parentNode.parentNode,t=document.createElement("button");t.classList.add("copy-code"),t.innerHTML="copy";function s(){t.innerHTML="copied!",setTimeout(()=>{t.innerHTML="copy"},2e3)}t.addEventListener("click",t=>{if("clipboard"in navigator){navigator.clipboard.writeText(e.textContent),s();return}const n=document.createRange();n.selectNodeContents(e);const o=window.getSelection();o.removeAllRanges(),o.addRange(n);try{document.execCommand("copy"),s()}catch{}o.removeRange(n)}),n.classList.contains("highlight")?n.appendChild(t):n.parentNode.firstChild==n||(e.parentNode.parentNode.parentNode.parentNode.parentNode.nodeName=="TABLE"?e.parentNode.parentNode.parentNode.parentNode.parentNode.appendChild(t):e.parentNode.appendChild(t))})</script></body></html>
