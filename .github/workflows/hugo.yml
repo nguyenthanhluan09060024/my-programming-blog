@@ -50,7 +50,7 @@ jobs:
           hugo \
             --gc \
             --minify \
-            --baseURL "${{ steps.pages.outputs.base_url }}"
+            --baseURL "https://nguyenthanhluan09060024.github.io/my-programming-blog/"
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
